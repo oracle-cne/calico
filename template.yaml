@@ -1,0 +1,7 @@
+---
+TagFormat: v(?P<major>[1-9]+)\.(?P<minor>[0-9]+)\.(?P<patch>[[:digit:]]+)
+Comparator: '0'
+BranchTemplate: feature/${major}.${minor}.${patch}
+MasterBranchTemplate: oracle/release/${major}.${minor}.${patch}
+TemplateDirectory: "v${major}.${minor}"
+SemverTagFilter: ">= v3.30.1"
