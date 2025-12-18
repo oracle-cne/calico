@@ -1,0 +1,26 @@
+FROM container-registry.oracle.com/os/oraclelinux:8
+
+COPY rpms/kube-controllers*.rpm /tmp/
+
+RUN dnf install -y /tmp/*.rpm &&\
+    dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
+    ln -s /usr/share/licenses /LICENSES
+
+FROM container-registry.oracle.com/os/oraclelinux:8-slim
+
+COPY --from=0 /bin/kube-controllers /usr/bin/kube-controllers
+
+COPY --from=0 /bin/check-status /usr/bin/check-status
+
+COPY --from=0 /usr/include /usr/include
+
+COPY --from=0 /usr/share/licenses/kube-controllers/* /usr/share/licenses/
+
+RUN mkdir /status /profiles &&\
+    touch /status/status.json && chown 999 /status/status.json &&\
+    touch /profiles/mem.pprof && chown 999 /profiles/mem.pprof &&\
+    touch /profiles/cpu.pprof && chown 999 /profiles/cpu.pprof
+
+USER 999
+
+ENTRYPOINT ["/usr/bin/kube-controllers"]
