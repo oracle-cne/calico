@@ -1,0 +1,33 @@
+FROM container-registry.oracle.com/os/oraclelinux:8
+
+COPY rpms/typha*.rpm /tmp/
+
+RUN dnf install -y /tmp/*.rpm &&\
+    dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
+    ln -s /usr/share/licenses /LICENSES
+
+#ADD typha.cfg /etc/calico/typha.cfg
+COPY typha/docker-image/typha.cfg /etc/calico/typha.cfg
+
+FROM container-registry.oracle.com/os/oraclelinux:8-slim
+
+RUN microdnf install -y tini
+
+RUN mkdir /code
+
+COPY --from=0 /bin/calico-typha /code/calico-typha
+
+COPY --from=0 /etc/calico/typha.cfg /etc/calico/typha.cfg
+
+COPY --from=0 /usr/share/licenses/typha/* /usr/share/licenses/
+
+WORKDIR /code
+
+ENV PATH="$PATH:/code"
+
+USER 999
+
+# Run Typha by default
+ENTRYPOINT ["/usr/sbin/tini", "--"]
+
+CMD ["calico-typha"]
