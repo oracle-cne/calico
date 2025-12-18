@@ -1,0 +1,75 @@
+# NOTE: OL8 needs an updated ipset, ipset-libs RPM to work with UER7
+FROM container-registry.oracle.com/os/oraclelinux:8
+
+COPY rpms/node*.rpm /tmp/
+
+COPY rpms/felix*.rpm /tmp/
+
+# --nogpgcheck is needed as this is an OL8 rpm
+    RUN dnf install -y /tmp/*.rpm runit calico-bird --nogpgcheck &&\
+    dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
+    ln -s /usr/share/licenses /LICENSES
+
+FROM container-registry.oracle.com/os/oraclelinux:8-slim
+
+RUN mkdir -p /etc/calico \
+             /etc/service \
+             /usr/lib/calico/bpf
+
+COPY --from=0 /bin/calico-node /bin/calico-node
+
+COPY --from=0 /bin/mountns /bin/mountns
+
+COPY --from=0 /sbin/* /sbin/
+
+COPY --from=0 /bin/ /bin/
+
+COPY --from=0 /etc/calico /etc/calico
+
+COPY --from=0 /etc/service /etc/service
+
+COPY --from=0 /etc/rc.local.node /etc/rc.local.node
+
+COPY --from=0 /usr/lib/calico/bpf /usr/lib/calico/bpf
+
+COPY THIRD_PARTY_LICENSES.txt /usr/share/licenses/
+
+COPY SECURITY.md /usr/share/licenses/
+
+RUN microdnf install --setopt=tsflags=nodocs -y \
+    bpftool conntrack-tools iproute iproute-tc \
+    ipset ipset-libs iptables iputils kmod libmnl libnfnetlink \
+    libnetfilter_conntrack libnetfilter_cthelper \
+    libnetfilter_cttimeout libnetfilter_queue libpcap \
+    net-tools procps which &&\
+    microdnf clean all &&\
+    rm -rf /var/cache/yum
+
+# Set the suid bit on bird to allow our user to execute them with root permissions.
+RUN chmod u+s /bin/bird*
+
+# Change the permissions for ipset so it can be run by any container user.
+RUN chgrp 0 /usr/sbin/ipset && \
+    chmod g=u /usr/sbin/ipset
+
+# Change the permissions for iptables so it can be run by any container user.
+RUN chgrp 0 /usr/sbin/iptables && \
+    chmod g=u /usr/sbin/iptables
+
+# Change permissions to make confd templates and output available in /etc/calico
+# to all container users.
+RUN chgrp -R 0 /etc/calico && \
+    chmod -R g=u /etc/calico
+
+# Set the suid bit on calico-node
+RUN chmod u+s /bin/calico-node
+
+# Set the suid bit on mountns
+RUN chmod u+s /bin/mountns
+
+RUN cp /etc/rc.local.node /etc/rc.local &&\
+    chmod +x /etc/rc.local
+
+CMD ["start_runit"]
+
+ENV SVDIR=/etc/service/enabled
