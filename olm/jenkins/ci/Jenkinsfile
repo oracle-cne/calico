@@ -7,7 +7,7 @@ String registry_namespace = "olcne";
 String registry = "container-registry.oracle.com/" + registry_namespace;
 
 olcnePipeline(
-  branchPattern: new BranchPattern(master: "oracle/release/{{{ .major }}}.{{{ .minor }}}.{{{ .patch }}}", feature: "(?!^release/.*$)(^.*$)"),
+  branchPattern: new BranchPattern(master: "oracle/release/{{{ .major }}}.{{{ .minor }}}.{{{ .patch }}}", feature: '(?!^release/.*$)(^.*$)'),
   yumOL8Repos: ['ol8_appstream', 'ol8_codeready_builder', 'ol8_addons'],
   yumOL9Repos: ['ol9_appstream', 'ol9_codeready_builder', 'ol9_addons'],
   builderEphemeralRequest: '25G',
