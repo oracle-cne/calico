@@ -819,11 +819,7 @@ github.com/aws/aws-sdk-go-v2/service/ec2
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -834,31 +830,11 @@ github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2017 GitHub noreply@github.com
-Copyright 2017 Henri Yandell hyandell@users.noreply.github.com
-Copyright 2017 Jason Del Ponte delpontej@gmail.com
-Copyright 2018 GitHub noreply@github.com
-Copyright 2018 Jason Del Ponte delpontej@gmail.com
-Copyright 2019 GitHub noreply@github.com
-Copyright 2019 Jason Del Ponte delpontej@gmail.com
-Copyright 2019 Shantanu Kotambkar 52007797+skotambkar@users.noreply.github.com
-Copyright 2020 GitHub noreply@github.com
-Copyright 2020 Jason Del Ponte delpontej@gmail.com
-Copyright 2020 Jordon Phillips JordonPhillips@users.noreply.github.com
-Copyright 2020 KaibaLopez vuner.lopez@gmail.com
-Copyright 2020 Sean McGrail mcgrails@amazon.com
-Copyright 2020 Sean McGrail skmcgrail@gmail.com
-Copyright 2020 skotambkar kotambka@amazon.com
-Copyright 2021 GitHub noreply@github.com
-Copyright 2021 Jason Del Ponte 961963+jasdel@users.noreply.github.com
-Copyright 2021 Jason Del Ponte delpontej@gmail.com
-Copyright 2021 Jordon Phillips JordonPhillips@users.noreply.github.com
-Copyright 2021 Sean McGrail mcgrails@amazon.com
-Copyright 2021 Shantanu Kotambkar kotambka@amazon.com
-Copyright 2021 skotambkar kotambka@amazon.com
-Copyright 2022 GitHub noreply@github.com
-Copyright 2022 Jason Del Ponte 961963+jasdel@users.noreply.github.com
-Copyright 2022 Sean McGrail mcgrails@amazon.com
+Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 --------------------------------- (separator) ----------------------------------
 
@@ -869,11 +845,7 @@ github.com/aws/aws-sdk-go-v2/service/internal/presigned-url
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -884,54 +856,11 @@ github.com/aws/aws-sdk-go-v2/service/sso
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2017 GitHub noreply@github.com
-Copyright 2017 Henri Yandell hyandell@users.noreply.github.com
-Copyright 2017 Jason Del Ponte delpontej@gmail.com
-Copyright 2018 GitHub noreply@github.com
-Copyright 2018 Jason Del Ponte delpontej@gmail.com
-Copyright 2019 GitHub noreply@github.com
-Copyright 2019 Jason Del Ponte delpontej@gmail.com
-Copyright 2019 Shantanu Kotambkar 52007797+skotambkar@users.noreply.github.com
-Copyright 2020 GitHub noreply@github.com
-Copyright 2020 Jason Del Ponte delpontej@gmail.com
-Copyright 2020 Jordon Phillips JordonPhillips@users.noreply.github.com
-Copyright 2020 KaibaLopez vuner.lopez@gmail.com
-Copyright 2020 Sean McGrail mcgrails@amazon.com
-Copyright 2020 Sean McGrail skmcgrail@gmail.com
-Copyright 2020 skotambkar kotambka@amazon.com
-Copyright 2021 GitHub noreply@github.com
-Copyright 2021 Jason Del Ponte 961963+jasdel@users.noreply.github.com
-Copyright 2021 Jason Del Ponte delpontej@gmail.com
-Copyright 2021 Jordon Phillips JordonPhillips@users.noreply.github.com
-Copyright 2021 Sean McGrail mcgrails@amazon.com
-Copyright 2021 Shantanu Kotambkar kotambka@amazon.com
-Copyright 2021 skotambkar kotambka@amazon.com
-Copyright 2022 AWS SDK for Go v2 automation user aws-sdk-go-v2-github@amazon.com
-Copyright 2022 GitHub noreply@github.com
-Copyright 2022 Isaiah Vita isvita@amazon.com
-Copyright 2022 Jason Del Ponte 961963+jasdel@users.noreply.github.com
-Copyright 2022 Ran Vaknin rvaknin@amazon.com
-Copyright 2022 Sam Bisciglia sbiscigl@asu.edu
-Copyright 2022 Sean McGrail 549813+skmcgrail@users.noreply.github.com
-Copyright 2022 Sean McGrail mcgrails@amazon.com
-Copyright 2022 Steven Yuan s.yuan.all@gmail.com
-Copyright 2022 kellertk kellertk@amazon.com
-Copyright 2023 AWS SDK for Go v2 automation user aws-sdk-go-v2-github@amazon.com
-Copyright 2023 GitHub noreply@github.com
-Copyright 2023 Isaiah Vita isvita@amazon.com
-Copyright 2023 Luc Talatinian lucix@amazon.com
-Copyright 2023 Ran Vaknin rvaknin@amazon.com
-Copyright 2023 Sam Bisciglia sbiscigl@asu.edu
-Copyright 2023 Steven Yuan s.yuan.all@gmail.com
-Copyright 2023 Steven Yuan yuasteve@amazon.com
-Copyright 2023 Tianyi Wang wty@amazon.com
-Copyright 2024 AWS SDK for Go v2 automation user aws-sdk-go-v2-github@amazon.com
-Copyright 2024 GitHub noreply@github.com
-Copyright 2024 Luc Talatinian lucix@amazon.com
-Copyright 2024 Luis Madrigal 🐧 lmadrig@amazon.com
-Copyright 2024 Miles Ziemer mziemer@amazon.com
-Copyright 2024 Ran Vaknin username@users.noreply.github.com
-Copyright 2024 Tianyi Wang wty@amazon.com
+Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 --------------------------------- (separator) ----------------------------------
 
@@ -984,18 +913,12 @@ Copyright 2023 Steven Yuan s.yuan.all@gmail.com
 Copyright 2023 Steven Yuan yuasteve@amazon.com
 Copyright 2023 Tianyi Wang wty@amazon.com
 Copyright 2024 AWS SDK for Go v2 automation user aws-sdk-go-v2-github@amazon.com
-Copyright 2024 Ashish Dhingra 67916761+ashishdhingra@users.noreply.github.com
-Copyright 2024 Bhavya Sharma bhavyssh@amazon.com
 Copyright 2024 GitHub noreply@github.com
 Copyright 2024 Luc Talatinian lucix@amazon.com
-Copyright 2024 Luis Madrigal 🐧 599908+Madrigal@users.noreply.github.com
 Copyright 2024 Luis Madrigal 🐧 lmadrig@amazon.com
 Copyright 2024 Miles Ziemer mziemer@amazon.com
-Copyright 2024 Ran Vaknin RanVaknin@users.noreply.github.com
 Copyright 2024 Ran Vaknin username@users.noreply.github.com
 Copyright 2024 Tianyi Wang wty@amazon.com
-Copyright 2025 AWS SDK for Go v2 automation user aws-sdk-go-v2-github@amazon.com
-Copyright 2025 GitHub noreply@github.com
 
 --------------------------------- (separator) ----------------------------------
 
@@ -1006,11 +929,7 @@ github.com/aws/aws-sdk-go-v2/service/sts
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -1172,18 +1091,38 @@ github.com/cncf/xds/go
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2020 GitHub noreply@github.com
-Copyright 2021 GitHub noreply@github.com
-Copyright 2021 Harvey Tuch htuch@google.com
-Copyright 2022 GitHub noreply@github.com
-Copyright 2023 GitHub noreply@github.com
-Copyright 2024 GitHub noreply@github.com
-Copyright 2025 GitHub noreply@github.com
+Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 --------------------------------- (separator) ----------------------------------
 
 == Dependency
 github.com/container-storage-interface/spec
+
+== License Type
+SPDX:Apache-2.0
+
+== Copyright
+(no copyright notices found)
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+github.com/containerd/containerd/api
+
+== License Type
+SPDX:Apache-2.0
+
+== Copyright
+Copyright (c) 2013, The GoGo Authors. All rights reserved.
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+github.com/containerd/errdefs
 
 == License Type
 SPDX:Apache-2.0
@@ -1260,35 +1199,13 @@ Copyright 2023 xing-yang xingyang105@gmail.com
 --------------------------------- (separator) ----------------------------------
 
 == Dependency
-github.com/containerd/containerd/api
-
-== License Type
-SPDX:Apache-2.0
-
-== Copyright
-Copyright (c) 2013, The GoGo Authors. All rights reserved.
-
---------------------------------- (separator) ----------------------------------
-
-== Dependency
-github.com/containerd/errdefs
-
-== License Type
-SPDX:Apache-2.0
-
-== Copyright
-Copyright The containerd Authors
-Copyright The containerd Authors.
-
---------------------------------- (separator) ----------------------------------
-
-== Dependency
 github.com/containerd/errdefs/pkg
 
 == License Type
 SPDX:Apache-2.0
 
 == Copyright
+Copyright The containerd Authors
 Copyright The containerd Authors.
 
 --------------------------------- (separator) ----------------------------------
@@ -1300,8 +1217,7 @@ github.com/containerd/log
 SPDX:Apache-2.0
 
 == Copyright
-Copyright The containerd Authors
-Copyright The containerd Authors.
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -1323,7 +1239,8 @@ github.com/containerd/ttrpc
 SPDX:Apache-2.0
 
 == Copyright
-(no copyright notices found)
+Copyright The containerd Authors
+Copyright The containerd Authors.
 
 --------------------------------- (separator) ----------------------------------
 
@@ -1334,7 +1251,7 @@ github.com/containerd/typeurl/v2
 SPDX:Apache-2.0
 
 == Copyright
-Copyright The containerd Authors.
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -1503,7 +1420,8 @@ github.com/distribution/reference
 SPDX:Apache-2.0
 
 == Copyright
-(no copyright notices found)
+Copyright The containerd Authors
+Copyright The containerd Authors.
 
 --------------------------------- (separator) ----------------------------------
 
@@ -1663,8 +1581,7 @@ github.com/envoyproxy/go-control-plane/envoy
 SPDX:Apache-2.0
 
 == Copyright
-Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
-Copyright The containerd Authors.
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -1675,7 +1592,37 @@ github.com/envoyproxy/protoc-gen-validate
 SPDX:Apache-2.0
 
 == Copyright
-(no copyright notices found)
+Copyright 2017 GitHub noreply@github.com
+Copyright 2017 Kuat kyessenov@users.noreply.github.com
+Copyright 2017 Matt Klein mklein@lyft.com
+Copyright 2017 Shriram Rajagopalan rshriram@users.noreply.github.com
+Copyright 2018 GitHub noreply@github.com
+Copyright 2018 Greg Greenway ggreenway@users.noreply.github.com
+Copyright 2018 Kuat kyessenov@users.noreply.github.com
+Copyright 2018 Shriram Rajagopalan rshriram@users.noreply.github.com
+Copyright 2019 Dhi Aurrahman dio@tetrate.io
+Copyright 2019 GitHub noreply@github.com
+Copyright 2019 Kuat kyessenov@users.noreply.github.com
+Copyright 2019 Shriram Rajagopalan rshriram@users.noreply.github.com
+Copyright 2019 Yangmin Zhu ymzhu@google.com
+Copyright 2019 go-control-plane(CircleCI) go-control-plane@users.noreply.github.com
+Copyright 2019 htuch htuch@users.noreply.github.com
+Copyright 2020 GitHub noreply@github.com
+Copyright 2020 Kuat kyessenov@users.noreply.github.com
+Copyright 2020 go-control-plane(Azure Pipelines) go-control-plane@users.noreply.github.com
+Copyright 2020 go-control-plane(CircleCI) go-control-plane@users.noreply.github.com
+Copyright 2021 GitHub noreply@github.com
+Copyright 2021 go-control-plane(Azure Pipelines) go-control-plane@users.noreply.github.com
+Copyright 2022 GitHub noreply@github.com
+Copyright 2022 go-control-plane(Azure Pipelines) go-control-plane@users.noreply.github.com
+Copyright 2023 GitHub noreply@github.com
+Copyright 2023 go-control-plane(Azure Pipelines) go-control-plane@users.noreply.github.com
+Copyright 2023 update-envoy[bot] 135279899+update-envoy[bot]@users.noreply.github.com
+Copyright 2024 GitHub noreply@github.com
+Copyright 2024 update-envoy[bot] 135279899+update-envoy[bot]@users.noreply.github.com
+Copyright 2025 GitHub noreply@github.com
+Copyright 2025 Valerian Roche valerian.roche@datadoghq.com
+Copyright 2025 update-envoy[bot] 135279899+update-envoy[bot]@users.noreply.github.com
 
 --------------------------------- (separator) ----------------------------------
 
@@ -3333,34 +3280,7 @@ github.com/moby/docker-image-spec
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2017 Chris Roche croche@lyft.com
-Copyright 2017 Chris Roche github@rodaine.com
-Copyright 2017 GitHub noreply@github.com
-Copyright 2017 htuch htuch@users.noreply.github.com
-Copyright 2018 Chris Roche github@rodaine.com
-Copyright 2018 GitHub noreply@github.com
-Copyright 2018 htuch htuch@users.noreply.github.com
-Copyright 2019 Alex Konradi akonradi@google.com
-Copyright 2019 Chris Roche chris@rodaine.com
-Copyright 2019 Chris Roche croche@lyft.com
-Copyright 2019 Chris Roche github@rodaine.com
-Copyright 2019 GitHub noreply@github.com
-Copyright 2019 Lizan Zhou lizan@tetrate.io
-Copyright 2019 Ryan Michela rmichela@salesforce.com
-Copyright 2019 envoy-bot envoy-bot@users.noreply.github.com
-Copyright 2019 htuch htuch@users.noreply.github.com
-Copyright 2020 Alex Konradi akonradi@google.com
-Copyright 2020 GitHub noreply@github.com
-Copyright 2020 envoy-bot envoy-bot@users.noreply.github.com
-Copyright 2021 GitHub noreply@github.com
-Copyright 2021 Ryan Michela rmichela@salesforce.com
-Copyright 2021 envoy-bot envoy-bot@users.noreply.github.com
-Copyright 2022 Elliot Jackson 13633636+ElliotMJackson@users.noreply.github.com
-Copyright 2022 GitHub noreply@github.com
-Copyright 2022 envoy-bot envoy-bot@users.noreply.github.com
-Copyright 2023 GitHub noreply@github.com
-Copyright 2024 GitHub noreply@github.com
-Copyright 2025 GitHub noreply@github.com
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -3393,7 +3313,37 @@ github.com/moby/sys/mountinfo
 SPDX:Apache-2.0
 
 == Copyright
-(no copyright notices found)
+Copyright 2015 Ankush Agarwal ankushagarwal11@gmail.com
+Copyright 2015 Joe Gordon joe.gordon0@gmail.com
+Copyright 2015 Josh Hawn josh.hawn@docker.com
+Copyright 2015 Mary Anthony mary@docker.com
+Copyright 2015 Sven Dowideit SvenDowideit@users.noreply.github.com
+Copyright 2015 Tomas Tomecek ttomecek@redhat.com
+Copyright 2016 Aaron Lehmann aaron.lehmann@docker.com
+Copyright 2016 GitHub noreply@github.com
+Copyright 2016 Otto Kekäläinen otto@seravo.fi
+Copyright 2016 Qiang Huang h.huangqiang@huawei.com
+Copyright 2016 Stefan J. Wernli swernli@microsoft.com
+Copyright 2016 Thomas Leonard thomas.leonard@docker.com
+Copyright 2016 Victor Vieux vieux@docker.com
+Copyright 2017 Akihiro Suda suda.akihiro@lab.ntt.co.jp
+Copyright 2017 GitHub noreply@github.com
+Copyright 2017 Sebastiaan van Stijn github@gone.nl
+Copyright 2017 Stephen J Day stephen.day@docker.com
+Copyright 2017 Timothy Hobbs timothyhobbs@seznam.cz
+Copyright 2018 Alex Goodman wagoodman@gmail.com
+Copyright 2018 bevisy binbin36520@gmail.com
+Copyright 2021 GitHub noreply@github.com
+Copyright 2021 haining.cao haining.cao@daocloud.io
+Copyright 2023 Ben Lovy ben@deciduously.com
+Copyright 2023 GitHub noreply@github.com
+Copyright 2023 Paweł Gronowski pawel.gronowski@docker.com
+Copyright 2023 Sebastiaan van Stijn github@gone.nl
+Copyright 2023 arcosx arcosx@outlook.com
+Copyright 2024 Cory Snider csnider@mirantis.com
+Copyright 2024 GitHub noreply@github.com
+Copyright 2024 Paweł Gronowski pawel.gronowski@docker.com
+Copyright 2024 Sebastiaan van Stijn github@gone.nl
 
 --------------------------------- (separator) ----------------------------------
 
@@ -3404,125 +3354,7 @@ github.com/moby/sys/userns
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2014 Ahmet Alp Balkan ahmetb@microsoft.com
-Copyright 2014 Alexander Larsson alexl@redhat.com
-Copyright 2014 Alexander Morozov lk4d4@docker.com
-Copyright 2014 Alexandr Morozov lk4d4@docker.com
-Copyright 2014 Alexandr Morozov lk4d4math@gmail.com
-Copyright 2014 Arnaud Porterie arnaud.porterie@docker.com
-Copyright 2014 Erik Dubbelboer erik@dubbelboer.com
-Copyright 2014 Guillaume J. Charmes guillaume.charmes@docker.com
-Copyright 2014 Guillaume J. Charmes guillaume@charmes.net
-Copyright 2014 Jessica Frazelle jess@docker.com
-Copyright 2014 Jessie Frazelle jfrazelle@users.noreply.github.com
-Copyright 2014 Kato Kazuyoshi kato.kazuyoshi@gmail.com
-Copyright 2014 Michael Crosby crosby.michael@gmail.com
-Copyright 2014 Michael Crosby crosbymichael@gmail.com
-Copyright 2014 Michael Crosby michael@crosbymichael.com
-Copyright 2014 Michael Crosby michael@docker.com
-Copyright 2014 Paul Nasrat pnasrat@gmail.com
-Copyright 2014 Peter Waller peter@scraperwiki.com
-Copyright 2014 Solomon Hykes solomon@docker.com
-Copyright 2014 Tianon Gravi admwiggin@gmail.com
-Copyright 2014 Tibor Vass teabee89@gmail.com
-Copyright 2014 Victor Vieux victor.vieux@docker.com
-Copyright 2014 Vincent Batts vbatts@redhat.com
-Copyright 2014 lalyos lalyos@yahoo.com
-Copyright 2014 shuai-z zs.broccoli@gmail.com
-Copyright 2014 unclejack unclejacksons@gmail.com
-Copyright 2015 Alexander Morozov lk4d4math@gmail.com
-Copyright 2015 Antonio Murdaca me@runcom.ninja
-Copyright 2015 Antonio Murdaca runcom@linux.com
-Copyright 2015 Antonio Murdaca runcom@users.noreply.github.com
-Copyright 2015 Arnaud Porterie arnaud.porterie@docker.com
-Copyright 2015 Cezar Sa Espinola cezarsa@gmail.com
-Copyright 2015 Chen Hanxiao chenhanxiao@cn.fujitsu.com
-Copyright 2015 Dan Walsh dwalsh@redhat.com
-Copyright 2015 David Calavera david.calavera@gmail.com
-Copyright 2015 Jamie Hannaford jamie.hannaford@rackspace.com
-Copyright 2015 John Howard jhoward@microsoft.com
-Copyright 2015 Justas Brazauskas brazauskasjustas@gmail.com
-Copyright 2015 Phil Estes estesp@linux.vnet.ibm.com
-Copyright 2015 Sebastiaan van Stijn thaJeztah@users.noreply.github.com
-Copyright 2015 Stefan J. Wernli swernli@microsoft.com
-Copyright 2015 Tim timwangdev@gmail.com
-Copyright 2015 Victor Vieux vieux@docker.com
-Copyright 2015 Vincent Demeester vincent@sbr.pm
-Copyright 2015 Yan Feng yanfeng2@huawei.com
-Copyright 2016 Aleksa Sarai asarai@suse.com
-Copyright 2016 Alexander Morozov lk4d4@docker.com
-Copyright 2016 Amit Krishnan amit.krishnan@oracle.com
-Copyright 2016 Brian Goff cpuguy83@gmail.com
-Copyright 2016 Daniel Nephin dnephin@docker.com
-Copyright 2016 Darren Stahl darst@microsoft.com
-Copyright 2016 Jessica Frazelle acidburn@docker.com
-Copyright 2016 Jhon Honce jhonce@redhat.com
-Copyright 2016 John Howard jhoward@microsoft.com
-Copyright 2016 Sebastiaan van Stijn thaJeztah@users.noreply.github.com
-Copyright 2016 Victor Vieux victorvieux@gmail.com
-Copyright 2016 Yong Tang yong.tang.github@outlook.com
-Copyright 2017 Brian Goff cpuguy83@gmail.com
-Copyright 2017 Christopher Jones tophj@linux.vnet.ibm.com
-Copyright 2017 Daniel Nephin dnephin@docker.com
-Copyright 2017 Derek McGowan derek@mcgstyle.net
-Copyright 2017 GitHub noreply@github.com
-Copyright 2017 John Howard jhoward@microsoft.com
-Copyright 2017 Justin Cormack justin.cormack@docker.com
-Copyright 2017 Kenfe-Mickael Laventure mickael.laventure@gmail.com
-Copyright 2017 Michael Crosby crosbymichael@gmail.com
-Copyright 2017 Naveed Jamil naveed.jamil@tenpearls.com
-Copyright 2017 Sebastiaan van Stijn github@gone.nl
-Copyright 2017 Steven Hartland steven.hartland@multiplay.co.uk
-Copyright 2017 Tobias Klauser tklauser@distanz.ch
-Copyright 2017 Vincent Demeester vincent@sbr.pm
-Copyright 2017 Yong Tang yong.tang.github@outlook.com
-Copyright 2017 phineas phin@phineas.io
-Copyright 2017 unclejack unclejack@users.noreply.github.com
-Copyright 2017 yuexiao-wang wang.yuexiao@zte.com.cn
-Copyright 2018 Brian Goff cpuguy83@gmail.com
-Copyright 2018 Daniel Nephin dnephin@docker.com
-Copyright 2018 Fabian Kramm kramm@covexo.com
-Copyright 2018 GitHub noreply@github.com
-Copyright 2018 Kasper Fabæch Brandt poizan@poizan.dk
-Copyright 2018 Kir Kolyshkin kolyshkin@gmail.com
-Copyright 2018 Oliver Reason oli@overrateddev.co
-Copyright 2018 Sebastiaan van Stijn github@gone.nl
-Copyright 2018 Vincent Demeester vincent@sbr.pm
-Copyright 2019 GitHub noreply@github.com
-Copyright 2019 John Howard jhoward@microsoft.com
-Copyright 2019 Kir Kolyshkin kolyshkin@gmail.com
-Copyright 2019 Olli Janatuinen olli.janatuinen@gmail.com
-Copyright 2019 Sebastiaan van Stijn github@gone.nl
-Copyright 2019 Stig Larsson stig@larsson.dev
-Copyright 2020 Aleksa Sarai cyphar@cyphar.com
-Copyright 2020 GitHub noreply@github.com
-Copyright 2020 Kir Kolyshkin kolyshkin@gmail.com
-Copyright 2020 Sebastiaan van Stijn github@gone.nl
-Copyright 2020 Shengjing Zhu zhsj@debian.org
-Copyright 2020 Tobias Klauser tklauser@distanz.ch
-Copyright 2020 liuxiaodong liuxiaodong@loongson.cn
-Copyright 2021 Eng Zer Jun engzerjun@gmail.com
-Copyright 2021 GitHub noreply@github.com
-Copyright 2021 Hajime Tazaki thehajime@gmail.com
-Copyright 2021 Kazuyoshi Kato katokazu@amazon.com
-Copyright 2021 Kir Kolyshkin kolyshkin@gmail.com
-Copyright 2021 Muhammad Kaisar Arkhan hi@yukiisbo.red
-Copyright 2021 Sebastiaan van Stijn github@gone.nl
-Copyright 2022 Artem Khramov akhramov@pm.me
-Copyright 2022 GitHub noreply@github.com
-Copyright 2022 Kathryn Baldauf kabaldau@microsoft.com
-Copyright 2022 Kazuyoshi Kato katokazu@amazon.com
-Copyright 2022 Kir Kolyshkin kolyshkin@gmail.com
-Copyright 2022 Manu Gupta manugupt1@gmail.com
-Copyright 2022 Sebastiaan van Stijn github@gone.nl
-Copyright 2022 谢致邦 (XIE Zhibang) Yeking@Red54.com
-Copyright 2023 Aleksa Sarai cyphar@cyphar.com
-Copyright 2023 GitHub noreply@github.com
-Copyright 2023 Kir Kolyshkin kolyshkin@gmail.com
-Copyright 2023 Sebastiaan van Stijn github@gone.nl
-Copyright 2023 Tianon Gravi admwiggin@gmail.com
-Copyright 2024 GitHub noreply@github.com
-Copyright 2024 Sebastiaan van Stijn github@gone.nl
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -3533,7 +3365,9 @@ github.com/modern-go/concurrent
 SPDX:Apache-2.0
 
 == Copyright
-(no copyright notices found)
+Copyright (c) 2014-2018 The Docker (no copyright notices found) Go Authors. All rights reserved.
+Copyright 2012 The Go Authors. All rights reserved.
+Copyright 2014-2018 Docker, Inc.
 
 --------------------------------- (separator) ----------------------------------
 
@@ -3544,9 +3378,7 @@ github.com/modern-go/reflect2
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2018 GitHub noreply@github.com
-Copyright 2018 Tao Wen taowen@gmail.com
-Copyright 2018 kr1sten0 zhqy0807@gmail.com
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -3787,7 +3619,9 @@ github.com/opencontainers/selinux
 SPDX:Apache-2.0
 
 == Copyright
-(no copyright notices found)
+Copyright 2018 GitHub noreply@github.com
+Copyright 2018 Tao Wen taowen@gmail.com
+Copyright 2018 kr1sten0 zhqy0807@gmail.com
 
 --------------------------------- (separator) ----------------------------------
 
@@ -4727,7 +4561,16 @@ github.com/spiffe/go-spiffe/v2
 SPDX:Apache-2.0
 
 == Copyright
-Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+Copyright 2018 GitHub noreply@github.com
+Copyright 2018 Justin Santa Barbara justinsb@google.com
+Copyright 2018 Tao Wen taowen@gmail.com
+Copyright 2018 nextzhou nextzhou@gmail.com
+Copyright 2020 Aaron Simmons paleozogt@gmail.com
+Copyright 2020 GitHub noreply@github.com
+Copyright 2020 Mikko Ylinen mikko.ylinen@intel.com
+Copyright 2020 xueyuan zhangxueyuan@ayang.com
+Copyright 2021 GitHub noreply@github.com
+Copyright 2021 Tao Wen taowen@chengfayun.com
 
 --------------------------------- (separator) ----------------------------------
 
@@ -5021,6 +4864,28 @@ go.opentelemetry.io/contrib/detectors/gcp
 SPDX:Apache-2.0
 
 == Copyright
+(no copyright notices found)
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc
+
+== License Type
+SPDX:Apache-2.0
+
+== Copyright
+Copyright 2014 gRPC authors.
+
+--------------------------------- (separator) ----------------------------------
+
+== Dependency
+go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+
+== License Type
+SPDX:Apache-2.0
+
+== Copyright
 Copyright (C) 1991, 1999 Free Software Foundation, Inc.
 Copyright (C) 2013 Blake Mizerany
 Copyright (C) 2013-2015 Alexei Starovoitov <ast@kernel.org>
@@ -5067,28 +4932,6 @@ Copyright The OpenTelemetry Authors
 --------------------------------- (separator) ----------------------------------
 
 == Dependency
-go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc
-
-== License Type
-SPDX:Apache-2.0
-
-== Copyright
-Copyright 2014 gRPC authors.
-
---------------------------------- (separator) ----------------------------------
-
-== Dependency
-go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
-
-== License Type
-SPDX:Apache-2.0
-
-== Copyright
-(no copyright notices found)
-
---------------------------------- (separator) ----------------------------------
-
-== Dependency
 go.opentelemetry.io/otel
 
 == License Type
@@ -5097,6 +4940,8 @@ SPDX:Apache-2.0
 == Copyright
 Copyright (c) 2016-2017 Uber Technologies, Inc.
 Copyright (c) 2017 Uber Technologies, Inc.
+Copyright (c) 2018 Uber Technologies, Inc.
+Copyright (c) 2019 The Jaeger Authors.
 Copyright (c) 2021 The Jaeger Authors.
 Copyright 2014 gRPC authors.
 Copyright 2017, OpenCensus Authors
@@ -5112,9 +4957,7 @@ go.opentelemetry.io/otel/exporters/otlp/otlptrace
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2009 The Go Authors. All rights reserved.
-Copyright 2022 The Go Authors. All rights reserved.
-Copyright The OpenTelemetry Authors
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
@@ -5138,7 +4981,9 @@ go.opentelemetry.io/otel/metric
 SPDX:Apache-2.0
 
 == Copyright
-(no copyright notices found)
+Copyright 2009 The Go Authors. All rights reserved.
+Copyright 2022 The Go Authors. All rights reserved.
+Copyright The OpenTelemetry Authors
 
 --------------------------------- (separator) ----------------------------------
 
@@ -5149,9 +4994,7 @@ go.opentelemetry.io/otel/sdk
 SPDX:Apache-2.0
 
 == Copyright
-Copyright 2009 The Go Authors. All rights reserved.
-Copyright 2022 The Go Authors. All rights reserved.
-Copyright The OpenTelemetry Authors
+(no copyright notices found)
 
 --------------------------------- (separator) ----------------------------------
 
