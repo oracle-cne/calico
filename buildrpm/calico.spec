@@ -41,6 +41,7 @@ Requires:       conntrack-tools
 Requires:       file
 Requires:       net-tools
 Requires:       kmod
+Patch0:         metadata.mk.patch
 
 %description
 Calico is an open source networking and network security solution for Kubernetes, virtual machines, and bare-metal workloads. Calico provides two major services for Cloud Native applications:
@@ -105,6 +106,7 @@ Typha sits between the datastore (such as the Kubernetes API server) and many in
 
 %prep
 %setup -n %{name}-%{version}
+%patch0
 
 %build
 GOPATH=$(pwd)
@@ -112,7 +114,7 @@ mkdir -p ${GOPATH}/bin
 
 %if %{?oraclelinux} == 8
 # setup gcc toolset 11
-dnf install gcc-toolset-11
+dnf install -y gcc-toolset-11
 echo "source /opt/rh/gcc-toolset-11/enable" >> ~/.bashrc
 source ~/.bashrc
 %endif
@@ -166,10 +168,10 @@ go build -trimpath=false -v \
 popd
 
 %define rpm_name felix
-podman pull %{registry_url}/go-build:1.24.13-llvm18.1.8-k8s1.32.13
-podman tag %{registry_url}/go-build:1.24.13-llvm18.1.8-k8s1.32.13 %{registry_url}/go-build:1.24.13-llvm18.1.8-k8s1.32.13-%{arch}
+podman pull %{registry_url}/go-build:v1.24.2
+podman tag %{registry_url}/go-build:v1.24.2 %{registry_url}/go-build:v1.24.2-%{arch}
 export GO_BUILD_IMAGE=%{registry_url}/go-build
-export GO_BUILD_VER=1.24.13-llvm18.1.8-k8s1.32.13
+export GO_BUILD_VER=v1.24.2
 pushd %{rpm_name}
 make build
 popd
