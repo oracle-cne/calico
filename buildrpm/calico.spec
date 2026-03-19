@@ -168,10 +168,10 @@ go build -trimpath=false -v \
 popd
 
 %define rpm_name felix
-podman pull %{registry_url}/go-build:v1.24.2
-podman tag %{registry_url}/go-build:v1.24.2 %{registry_url}/go-build:v1.24.2-%{arch}
+podman pull %{registry_url}/go-build:1.24.13-llvm18.1.8-k8s1.32.13
+podman tag %{registry_url}/go-build:1.24.13-llvm18.1.8-k8s1.32.13 %{registry_url}/go-build:1.24.13-llvm18.1.8-k8s1.32.13-%{arch}
 export GO_BUILD_IMAGE=%{registry_url}/go-build
-export GO_BUILD_VER=v1.24.2
+export GO_BUILD_VER=1.24.13-llvm18.1.8-k8s1.32.13
 pushd %{rpm_name}
 make build
 popd
