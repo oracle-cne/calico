@@ -29,8 +29,6 @@ BuildRequires:  podman
 BuildRequires:  podman-docker
 BuildRequires:	make
 BuildRequires:  golang >= 1.20.12
-BuildRequires:  libbpf-devel
-BuildRequires:  libbpf
 BuildRequires:  clang
 BuildRequires:  kernel-headers
 Requires:       runit
