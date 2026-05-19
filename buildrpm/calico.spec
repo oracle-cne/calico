@@ -43,7 +43,6 @@ Requires:       conntrack-tools
 Requires:       file
 Requires:       net-tools
 Requires:       kmod
-Patch0:         metadata.mk.patch
 
 %description
 Calico is an open source networking and network security solution for Kubernetes, virtual machines, and bare-metal workloads. Calico provides two major services for Cloud Native applications:
@@ -108,7 +107,6 @@ Typha sits between the datastore (such as the Kubernetes API server) and many in
 
 %prep
 %setup -n %{name}-%{version}
-%patch0
 
 %build
 GOPATH=$(pwd)
