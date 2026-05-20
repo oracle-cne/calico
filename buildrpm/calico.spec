@@ -33,6 +33,9 @@ BuildRequires:  libbpf-devel
 BuildRequires:  libbpf
 BuildRequires:  clang
 BuildRequires:  kernel-headers
+%if %{?oraclelinux} == 8
+BuildRequires:  gcc-toolset-11
+%endif
 Requires:       runit
 Requires:       tini
 Requires:       iptables
@@ -113,10 +116,7 @@ GOPATH=$(pwd)
 mkdir -p ${GOPATH}/bin
 
 %if %{?oraclelinux} == 8
-# setup gcc toolset 11
-dnf install gcc-toolset-11
-echo "source /opt/rh/gcc-toolset-11/enable" >> ~/.bashrc
-source ~/.bashrc
+source /opt/rh/gcc-toolset-11/enable
 %endif
 
 # Binaries to build: apiserver filecheck dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
@@ -168,10 +168,6 @@ go build -trimpath=false -v \
 popd
 
 %define rpm_name felix
-podman pull %{registry_url}/go-build:v1.24.2
-podman tag %{registry_url}/go-build:v1.24.2 %{registry_url}/go-build:v1.24.2-%{arch}
-export GO_BUILD_IMAGE=%{registry_url}/go-build
-export GO_BUILD_VER=v1.24.2
 pushd %{rpm_name}
 make build
 popd
