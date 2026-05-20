@@ -31,6 +31,8 @@ BuildRequires:	make
 BuildRequires:  golang >= 1.20.12
 BuildRequires:  libbpf-devel
 BuildRequires:  libbpf
+BuildRequires:  libpcap-devel
+BuildRequires:  libpcap
 BuildRequires:  clang
 BuildRequires:  kernel-headers
 %if %{?oraclelinux} == 8
@@ -168,9 +170,7 @@ go build -trimpath=false -v \
 popd
 
 %define rpm_name felix
-pushd %{rpm_name}
-make build
-popd
+felix/hack/build-felix-host.sh --arch %{arch}
 
 %define rpm_name kube-controllers
 pushd %{rpm_name}
