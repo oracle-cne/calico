@@ -34,6 +34,7 @@ BuildRequires:  libbpf
 BuildRequires:  libpcap-devel
 BuildRequires:  libpcap
 BuildRequires:  clang
+BuildRequires:  llvm
 BuildRequires:  kernel-headers
 %if %{?oraclelinux} == 8
 BuildRequires:  gcc-toolset-11
