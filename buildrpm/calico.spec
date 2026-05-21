@@ -122,7 +122,7 @@ mkdir -p ${GOPATH}/bin
 source /opt/rh/gcc-toolset-11/enable
 %endif
 
-# Binaries to build: apiserver filecheck dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
+# Binaries to build: apiserver dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
 %define rpm_name apiserver
 pushd %{rpm_name}
 go build -trimpath=false -v \
@@ -230,7 +230,6 @@ popd
 %install
 # apiserver
 install -D -m 755 bin/apiserver %{buildroot}%{_bindir}/apiserver
-install -D -m 755 bin/filecheck %{buildroot}%{_bindir}/filecheck
 
 # app-policy
 install -D -m 755 bin/dikastes %{buildroot}%{_bindir}/dikastes
@@ -290,7 +289,6 @@ install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 %files -n apiserver
 %license apiserver/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/apiserver
-%attr(755,root,root) %{_bindir}/filecheck
 
 %files -n app-policy
 %license app-policy/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
