@@ -308,7 +308,7 @@ install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 
 %files -n cni-plugin
 %license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
-%attr(755,root,root) %{_bindir}/cni-plugin-install
+%attr(755,root,root) /opt/cni/bin/cni-plugin-install
 
 %files -n felix
 %license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
@@ -352,8 +352,8 @@ cp /etc/rc.local.node /etc/rc.local
 
 
 %post -n cni-plugin
-ln -s /bin/cni-plugin-install /bin/calico
-ln -s /bin/cni-plugin-install /bin/calico-ipam
+ln -s /opt/bin/cni-plugin-install /bin/calico
+ln -s /opt/bin/cni-plugin-install /bin/calico-ipam
 
 
 %postun -n node
