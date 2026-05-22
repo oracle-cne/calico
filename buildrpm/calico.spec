@@ -205,7 +205,13 @@ popd
 
 %define rpm_name pod2daemon
 pushd %{rpm_name}
-# node-driver-registrar is built from upstream kubernetes-csi project so need to git clone.
+# node-driver-registrar is built from the upstream kubernetes-csi source staged by hack/download-build-deps.sh.
+pushd node-driver-registrar
+CGO_ENABLED=0 go build -trimpath=false -buildvcs=false -v \
+         -o ${GOPATH}/bin/node-driver-registrar \
+         cmd/csi-node-driver-registrar/*.go
+popd
+
 go build -trimpath=false -v \
          -o ${GOPATH}/bin/flexvol \
          -ldflags "-X main.VERSION=v%{version}" \
