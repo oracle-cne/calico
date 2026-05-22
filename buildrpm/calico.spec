@@ -275,8 +275,8 @@ binary=(restart-calico-confd start_runit versions)
 for bin in "${binary[@]}"; do
 install -p node/filesystem/sbin/${bin} %{buildroot}/usr/sbin/
 done
-install -D -m 755 node/dist/bin/calico-node-%{arch} %{buildroot}%{_bindir}/calico-node
-install -D -m 755 node/dist/bin/mountns-%{arch} %{buildroot}%{_bindir}/mountns
+install -D -m 755 bin/calico-node %{buildroot}%{_bindir}/calico-node
+install -D -m 755 bin/mountns %{buildroot}%{_bindir}/mountns
 
 # pod2daemon
 install -D -m 755 bin/node-driver-registrar %{buildroot}%{_bindir}/node-driver-registrar
