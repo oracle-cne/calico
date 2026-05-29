@@ -34,7 +34,7 @@ mkdir -p ${IMAGE_LOCATION}/oracle_docker
 
 CALICO_IMAGE="apiserver cni csi ctl dikastes kube-controllers node node-driver-registrar pod2daemon-flexvol typha"
 for IMAGE in ${CALICO_IMAGE}; do
-	DOCKER_FILE=./olm/builds/Dockerfile.ol0
+	DOCKER_FILE=./olm/builds/Dockerfile.ol9
 	if [ "${IMAGE}" = "node" ]; then
 		DOCKER_FILE=./olm/builds/Dockerfile.ol9
 	fi
