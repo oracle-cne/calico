@@ -1,7 +1,5 @@
 FROM container-registry.oracle.com/os/oraclelinux:9
 
-COPY pod2daemon/flexvol/docker/clean.sh /usr/local/bin/clean.sh
-
 COPY pod2daemon/flexvol/docker/flexvol.sh /usr/local/bin/flexvol.sh
 
 COPY rpms/pod2daemon*.rpm /tmp/
@@ -13,8 +11,6 @@ RUN dnf install -y /tmp/*.rpm &&\
 FROM container-registry.oracle.com/os/oraclelinux:9-slim
 
 COPY --from=0 /bin/flexvol /usr/local/bin/flexvol
-
-COPY --from=0 /usr/local/bin/clean.sh /usr/local/bin/clean.sh
 
 COPY --from=0 /usr/local/bin/flexvol.sh /usr/local/bin/flexvol.sh
 
