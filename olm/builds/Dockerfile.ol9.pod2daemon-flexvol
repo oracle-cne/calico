@@ -1,6 +1,6 @@
 FROM container-registry.oracle.com/os/oraclelinux:9
 
-COPY pod2daemon/flexvol/docker/flexvol.sh /usr/local/bin/flexvol.sh
+COPY pod2daemon/flexvol/docker-image/flexvol.sh /usr/local/bin/flexvol.sh
 
 COPY rpms/pod2daemon*.rpm /tmp/
 
