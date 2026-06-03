@@ -20,18 +20,32 @@
 /dist/
 .go-pkg-cache/
 /artifacts/
-bpf-gpl/libbpf
+
+# Host-build dependency/source preparation.
+# felix/hack/download-felix-host-deps.sh clones libbpf and generates Go sources
+# before binary builds.  Keep those source artifacts visible so they can be
+# added to the repository for offline builds.
+#
+# Generated source check-in candidates include:
+#   bpf-gpl/libbpf/
+#   bpf-gpl/.libbpf-*
+#   bpf-gpl/libbpf/offline-include/**/*.h
+#   bpf/asm/*_string.go
+#   routetable/*_string.go
+#   proto/*pb.go
+
+# Host-build binary artifacts from compiling the checked-in libbpf source.
 bpf-gpl/libbpf/src/amd64/
 bpf-gpl/libbpf/src/arm64/
 bpf-gpl/libbpf/src/ppc64le/
 bpf-gpl/libbpf/src/s390x/
-bpf-gpl/.libbpf*
 bpf-gpl/*.ll.tmp
 bpf-gpl/ut/*.ll.tmp
 
 # IDE files.
 /.idea/
 /.vscode/
+.claude
 
 # Patterns to match files from older releases (prevents lots of
 # untracked files from showing up when switching from a maintenance branch.
