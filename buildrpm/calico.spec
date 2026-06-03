@@ -265,7 +265,7 @@ install -D -m 755 bin/kube-controllers %{buildroot}%{_bindir}/kube-controllers
 install -D -m 755 bin/check-status %{buildroot}%{_bindir}/check-status
 
 # node
-directories=(bird bird6 confd felix node-services)
+directories=(bird bird6 confd felix)
 for directory in "${directories[@]}"; do
   install -d -m 755 %{buildroot}/etc/service/available/${directory}/log
   install -p node/filesystem/etc/service/available/${directory}/run %{buildroot}/etc/service/available/${directory}
