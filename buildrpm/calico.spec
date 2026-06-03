@@ -31,8 +31,14 @@ BuildRequires:	make
 BuildRequires:  golang >= 1.20.12
 BuildRequires:  libbpf-devel
 BuildRequires:  libbpf
+BuildRequires:  libpcap-devel
+BuildRequires:  libpcap
 BuildRequires:  clang
+BuildRequires:  llvm
 BuildRequires:  kernel-headers
+%if %{?oraclelinux} == 8
+BuildRequires:  gcc-toolset-11
+%endif
 Requires:       runit
 Requires:       tini
 Requires:       iptables
@@ -43,7 +49,6 @@ Requires:       conntrack-tools
 Requires:       file
 Requires:       net-tools
 Requires:       kmod
-Patch0:         metadata.mk.patch
 
 %description
 Calico is an open source networking and network security solution for Kubernetes, virtual machines, and bare-metal workloads. Calico provides two major services for Cloud Native applications:
@@ -108,20 +113,17 @@ Typha sits between the datastore (such as the Kubernetes API server) and many in
 
 %prep
 %setup -n %{name}-%{version}
-%patch0
+cp LICENSE.md LICENSE
 
 %build
 GOPATH=$(pwd)
 mkdir -p ${GOPATH}/bin
 
 %if %{?oraclelinux} == 8
-# setup gcc toolset 11
-dnf install gcc-toolset-11
-echo "source /opt/rh/gcc-toolset-11/enable" >> ~/.bashrc
-source ~/.bashrc
+source /opt/rh/gcc-toolset-11/enable
 %endif
 
-# Binaries to build: apiserver filecheck dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
+# Binaries to build: apiserver dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
 %define rpm_name apiserver
 pushd %{rpm_name}
 go build -trimpath=false -v \
@@ -170,13 +172,7 @@ go build -trimpath=false -v \
 popd
 
 %define rpm_name felix
-podman pull %{registry_url}/go-build:v1.24.2
-podman tag %{registry_url}/go-build:v1.24.2 %{registry_url}/go-build:v1.24.2-%{arch}
-export GO_BUILD_IMAGE=%{registry_url}/go-build
-export GO_BUILD_VER=v1.24.2
-pushd %{rpm_name}
-make build
-popd
+felix/hack/build-felix-host.sh --arch %{arch}
 
 %define rpm_name kube-controllers
 pushd %{rpm_name}
@@ -210,7 +206,13 @@ popd
 
 %define rpm_name pod2daemon
 pushd %{rpm_name}
-# node-driver-registrar is built from upstream kubernetes-csi project so need to git clone.
+# node-driver-registrar is built from the upstream kubernetes-csi source staged by hack/download-build-deps.sh.
+pushd node-driver-registrar
+CGO_ENABLED=0 go build -trimpath=false -buildvcs=false -v \
+         -o ${GOPATH}/bin/node-driver-registrar \
+         cmd/csi-node-driver-registrar/*.go
+popd
+
 go build -trimpath=false -v \
          -o ${GOPATH}/bin/flexvol \
          -ldflags "-X main.VERSION=v%{version}" \
@@ -235,7 +237,6 @@ popd
 %install
 # apiserver
 install -D -m 755 bin/apiserver %{buildroot}%{_bindir}/apiserver
-install -D -m 755 bin/filecheck %{buildroot}%{_bindir}/filecheck
 
 # app-policy
 install -D -m 755 bin/dikastes %{buildroot}%{_bindir}/dikastes
@@ -247,6 +248,7 @@ install -D -m 755 bin/calicoctl %{buildroot}%{_bindir}/calicoctl
 # cni-plugin
 install -m 755 -d %{buildroot}/opt/cni/bin
 install -D -m 755 bin/cni-plugin-install %{buildroot}/opt/cni/bin/install
+install -D -m 755 bin/cni-plugin-install %{buildroot}/opt/cni/bin/cni-plugin-install
 install -D -m 755 bin/calico %{buildroot}/opt/cni/bin/calico
 install -D -m 755 bin/calico %{buildroot}/opt/cni/bin/calico-ipam
 
@@ -263,7 +265,7 @@ install -D -m 755 bin/kube-controllers %{buildroot}%{_bindir}/kube-controllers
 install -D -m 755 bin/check-status %{buildroot}%{_bindir}/check-status
 
 # node
-directories=(allocate-tunnel-addrs bird bird6 calico-bgp-daemon cni confd felix monitor-addresses node-status-reporter)
+directories=(bird bird6 confd felix node-services)
 for directory in "${directories[@]}"; do
   install -d -m 755 %{buildroot}/etc/service/available/${directory}/log
   install -p node/filesystem/etc/service/available/${directory}/run %{buildroot}/etc/service/available/${directory}
@@ -281,8 +283,8 @@ binary=(restart-calico-confd start_runit versions)
 for bin in "${binary[@]}"; do
 install -p node/filesystem/sbin/${bin} %{buildroot}/usr/sbin/
 done
-install -D -m 755 node/dist/bin/calico-node-%{arch} %{buildroot}%{_bindir}/calico-node
-install -D -m 755 node/dist/bin/mountns-%{arch} %{buildroot}%{_bindir}/mountns
+install -D -m 755 bin/calico-node %{buildroot}%{_bindir}/calico-node
+install -D -m 755 bin/mountns %{buildroot}%{_bindir}/mountns
 
 # pod2daemon
 install -D -m 755 bin/node-driver-registrar %{buildroot}%{_bindir}/node-driver-registrar
@@ -293,37 +295,39 @@ install -D -m 755 bin/csidriver %{buildroot}%{_bindir}/csidriver
 install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 
 %files -n apiserver
-%license apiserver/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/apiserver
-%attr(755,root,root) %{_bindir}/filecheck
 
 %files -n app-policy
-%license app-policy/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/dikastes
 %attr(755,root,root) %{_bindir}/healthz
 
 %files -n calicoctl
-%license calicoctl/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calicoctl
 
 %files -n cni-plugin
-%license cni-plugin/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
-%attr(755,root,root) %{_bindir}/cni-plugin-install
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%attr(755,root,root) /opt/cni/bin/install
+%attr(755,root,root) /opt/cni/bin/cni-plugin-install
+%attr(755,root,root) /opt/cni/bin/calico
+%attr(755,root,root) /opt/cni/bin/calico-ipam
 
 %files -n felix
-%license felix/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calico-felix
 %attr(755,root,root) %{_bindir}/calico-felix-wrapper
 /usr/lib/calico/bpf/*
 /etc/calico/felix.cfg
 
 %files -n kube-controllers
-%license kube-controllers/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/kube-controllers
 %attr(755,root,root) %{_bindir}/check-status
 
 %files -n node
-%license node/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 /etc/calico/*
 /etc/service/*
 %attr(755,root,root) /etc/rc.local.node
@@ -332,13 +336,13 @@ install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 %attr(755,root,root) %{_bindir}/mountns
 
 %files -n pod2daemon
-%license pod2daemon/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/node-driver-registrar
 %attr(755,root,root) %{_bindir}/flexvol
 %attr(755,root,root) %{_bindir}/csidriver
 
 %files -n typha
-%license typha/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calico-typha
 
 
@@ -352,8 +356,8 @@ cp /etc/rc.local.node /etc/rc.local
 
 
 %post -n cni-plugin
-ln -s /bin/cni-plugin-install /bin/calico
-ln -s /bin/cni-plugin-install /bin/calico-ipam
+ln -s /opt/cni/bin/calico /bin/calico
+ln -s /opt/cni/bin/calico-ipam /bin/calico-ipam
 
 
 %postun -n node
@@ -368,5 +372,5 @@ rm -f /bin/calico-ipam
 
 
 %changelog
-* Wed Apr 15 2026 Oracle Cloud Native Environment Authors <noreply@oracle.com> - %{version}-%{oracle_release_version}
+* Thu Apr 30 2026 Oracle Cloud Native Environment Authors <noreply@oracle.com> - %{version}-%{oracle_release_version}
 - Add Oracle specific files for calico

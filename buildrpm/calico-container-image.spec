@@ -33,10 +33,9 @@ dnf clean all && \
   yumdownloader --destdir=${PWD}/rpms *-%{version}-%{release}.%{_build_arch} --exclude calico-container-image-%{version}-%{release}.%{_build_arch}
 
 chmod +x ./olm/builds/build-image.sh
-./olm/builds/build-image.sh \
-    %{image_tag} \
-    _output \
-    %{registry}
+build_image_args="%{image_tag} _output %{registry}"
+%{?yumrepoconfig:build_image_args="${build_image_args} %{yumrepoconfig}"}
+./olm/builds/build-image.sh ${build_image_args}
 
 
 %install
@@ -64,5 +63,5 @@ done
 
 
 %changelog
-* Wed Apr 15 2026 Oracle Cloud Native Environment Authors <noreply@oracle.com> - %{version}-%{oracle_release_version}
+* Thu Apr 30 2026 Oracle Cloud Native Environment Authors <noreply@oracle.com> - %{version}-%{oracle_release_version}
 - Added Oracle Specific Files For calico
