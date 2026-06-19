@@ -1,0 +1,17 @@
+FROM container-registry.oracle.com/os/oraclelinux:8
+
+COPY rpms/pod2daemon*.rpm /tmp/
+
+RUN dnf install -y /tmp/*.rpm &&\
+    dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
+    ln -s /usr/share/licenses /LICENSES
+
+FROM container-registry.oracle.com/os/oraclelinux:8-slim
+
+COPY --from=0 /bin/node-driver-registrar /usr/local/bin/node-driver-registrar
+
+COPY THIRD_PARTY_LICENSES.txt /usr/share/licenses/
+
+COPY SECURITY.md /usr/share/licenses/
+
+ENTRYPOINT ["/usr/local/bin/node-driver-registrar"]

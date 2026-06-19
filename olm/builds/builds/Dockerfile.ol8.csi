@@ -1,0 +1,15 @@
+FROM container-registry.oracle.com/os/oraclelinux:8
+
+COPY rpms/pod2daemon*.rpm /tmp/
+
+RUN dnf install -y /tmp/*.rpm &&\
+    dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
+    ln -s /usr/share/licenses /LICENSES
+
+FROM container-registry.oracle.com/os/oraclelinux:8-slim
+
+COPY --from=0 /bin/csidriver /usr/local/bin/csidriver
+
+COPY --from=0 /usr/share/licenses/pod2daemon* /usr/share/licenses/
+
+ENTRYPOINT ["/usr/local/bin/csidriver"]
