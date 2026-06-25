@@ -1,0 +1,29 @@
+FROM container-registry.oracle.com/os/oraclelinux:8
+
+COPY pod2daemon/flexvol/docker/clean.sh /usr/local/bin/clean.sh
+
+COPY pod2daemon/flexvol/docker/flexvol.sh /usr/local/bin/flexvol.sh
+
+COPY rpms/pod2daemon*.rpm /tmp/
+
+RUN dnf install -y /tmp/*.rpm &&\
+    dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
+    ln -s /usr/share/licenses /LICENSES
+
+FROM container-registry.oracle.com/os/oraclelinux:8-slim
+
+COPY --from=0 /bin/flexvol /usr/local/bin/flexvol
+
+COPY --from=0 /usr/local/bin/clean.sh /usr/local/bin/clean.sh
+
+COPY --from=0 /usr/local/bin/flexvol.sh /usr/local/bin/flexvol.sh
+
+COPY --from=0 /usr/share/licenses/pod2daemon/* /usr/share/licenses/
+
+RUN touch /in-the-container
+
+SHELL ["/bin/bash", "-c"]
+
+RUN  /usr/local/bin/clean.sh "/usr/local/bin/flexvol.sh" "/bin/cp" "/bin/chmod" "/bin/mv" "/bin/mount" "/bin/umount"
+
+ENTRYPOINT ["/usr/local/bin/flexvol.sh"]
