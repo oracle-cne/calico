@@ -25,14 +25,16 @@ Url:            https://github.com/projectcalico/calico
 Source:         %{name}-%{version}.tar.bz2
 Vendor:         Oracle America
 BuildRequires:  git
-BuildRequires:  podman
-BuildRequires:  podman-docker
 BuildRequires:	make
-BuildRequires:  golang >= 1.20.12
 BuildRequires:  libbpf-devel
 BuildRequires:  libbpf
+BuildRequires:  libbpf-static
 BuildRequires:  clang
+BuildRequires:  llvm
+BuildRequires:  gcc
 BuildRequires:  kernel-headers
+BuildRequires:  elfutils-libelf-devel
+BuildRequires:  zlib-devel
 Requires:       runit
 Requires:       tini
 Requires:       iptables
@@ -43,7 +45,6 @@ Requires:       conntrack-tools
 Requires:       file
 Requires:       net-tools
 Requires:       kmod
-Patch0:         metadata.mk.patch
 
 %description
 Calico is an open source networking and network security solution for Kubernetes, virtual machines, and bare-metal workloads. Calico provides two major services for Cloud Native applications:
@@ -108,11 +109,11 @@ Typha sits between the datastore (such as the Kubernetes API server) and many in
 
 %prep
 %setup -n %{name}-%{version}
-%patch0
 
 %build
 GOPATH=$(pwd)
 mkdir -p ${GOPATH}/bin
+export GOTOOLCHAIN=local
 
 %if %{?oraclelinux} == 8
 # setup gcc toolset 11
@@ -170,13 +171,61 @@ go build -trimpath=false -v \
 popd
 
 %define rpm_name felix
-podman pull %{registry_url}/go-build:v1.24.2
-podman tag %{registry_url}/go-build:v1.24.2 %{registry_url}/go-build:v1.24.2-%{arch}
-export GO_BUILD_IMAGE=%{registry_url}/go-build
-export GO_BUILD_VER=v1.24.2
+echo "+++ BUILDING FELIX WITH LOCAL TOOLCHAIN"
+echo "+++ Verifying local build tools"
+go version
+clang --version
+llc --version
+gcc -dumpmachine
+
+echo "+++ Preparing Felix libbpf compatibility tree from local RPM content"
+mkdir -p %{rpm_name}/bpf-gpl/libbpf/src/%{arch}
+mkdir -p %{rpm_name}/bpf-gpl/libbpf/include/uapi
+for header in /usr/include/bpf/*.h; do
+  ln -sf "${header}" "%{rpm_name}/bpf-gpl/libbpf/src/$(basename "${header}")"
+done
+ln -sf "%{_libdir}/libbpf.a" "%{rpm_name}/bpf-gpl/libbpf/src/%{arch}/libbpf.a"
+
+echo "+++ Building Felix Apache-licensed BPF objects"
+make -j$(nproc) -C %{rpm_name}/bpf-apache clean all
+
+echo "+++ Building Felix GPL BPF objects with local libbpf headers"
+make -j$(nproc) -C %{rpm_name}/bpf-gpl clean all ut-objs map-objs
+
+echo "+++ Staging Felix BPF objects"
+rm -rf %{rpm_name}/bin/bpf
+mkdir -p %{rpm_name}/bin/bpf
+for obj in $(%{rpm_name}/bpf-gpl/list-objs); do
+  cp "%{rpm_name}/bpf-gpl/${obj}" "%{rpm_name}/bin/bpf/"
+done
+cp %{rpm_name}/bpf-gpl/bin/tc_preamble_ingress.o \
+   %{rpm_name}/bpf-gpl/bin/tc_preamble_egress.o \
+   %{rpm_name}/bpf-gpl/bin/xdp_preamble.o \
+   %{rpm_name}/bpf-gpl/bin/policy_default_ingress.o \
+   %{rpm_name}/bpf-gpl/bin/policy_default_egress.o \
+   %{rpm_name}/bpf-gpl/bin/tcx_test.o \
+   %{rpm_name}/bpf-gpl/bin/common_map_stub.o \
+   %{rpm_name}/bpf-gpl/bin/ipv4_map_stub.o \
+   %{rpm_name}/bpf-gpl/bin/ipv6_map_stub.o \
+   %{rpm_name}/bpf-gpl/bin/xdp_map_stub.o \
+   %{rpm_name}/bpf-gpl/bin/common_map_stub_ing.o \
+   %{rpm_name}/bpf-apache/bin/*.o \
+   %{rpm_name}/bin/bpf/
+
+echo "+++ Building Felix binary with local Go and libbpf-static"
 pushd %{rpm_name}
-make build
+CGO_ENABLED=1 \
+CGO_CFLAGS="-I/usr/include/bpf -I${GOPATH}/%{rpm_name}/bpf-gpl -Werror" \
+CGO_LDFLAGS="-L${GOPATH}/%{rpm_name}/bpf-gpl/libbpf/src/%{arch} -lbpf -lelf -lz" \
+go build -trimpath=false -v -buildvcs=false \
+         -o bin/calico-felix-%{arch} \
+         -ldflags "-X github.com/projectcalico/calico/pkg/buildinfo.Version=v%{version} \
+                   -X github.com/projectcalico/calico/pkg/buildinfo.BuildDate=$(date -u +'%FT%T%z') \
+                   -X github.com/projectcalico/calico/pkg/buildinfo.GitRevision=%{git_short_ver} \
+                   -B 0x$(git rev-parse HEAD)" \
+         github.com/projectcalico/calico/felix/cmd/calico-felix
 popd
+echo "+++ Finished building Felix with local toolchain"
 
 %define rpm_name kube-controllers
 pushd %{rpm_name}
