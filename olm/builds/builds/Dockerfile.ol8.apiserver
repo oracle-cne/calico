@@ -12,8 +12,6 @@ RUN mkdir /code
 
 COPY --from=0 /bin/apiserver /code/apiserver
 
-COPY --from=0 /bin/filecheck /code/filecheck
-
 COPY --from=0 /usr/share/licenses/apiserver/* /usr/share/licenses/
 
 WORKDIR /code

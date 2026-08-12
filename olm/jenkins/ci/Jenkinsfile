@@ -26,8 +26,8 @@ olcnePipeline(
   ],
   customPlatformStages: [
     customPlatformSteps: [
-      ol8: [container: [enabled: true ], buildContainerRpms: [enabled: true ]],
-      ol9: [container: [enabled: false ], buildContainerRpms: [enabled: false ]],
+      ol8: [container: [enabled: false ], buildContainerRpms: [enabled: false ]],
+      ol9: [container: [enabled: true ], buildContainerRpms: [enabled: true ]],
     ],
   ]
 )
