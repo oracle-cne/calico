@@ -5,12 +5,14 @@ SPDX:Apache-2.0
 
 ---------------------------------- Copyright -----------------------------------
 Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
+Copyright (C) 1991, 1999 Free Software Foundation, Inc.
 Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
 Copyright (C) <year>  <name of author>
 Copyright (C) year name of author
 Copyright (c) $$YEAR Tigera/!s/Copyright (c) \([0-9]\{4\}\)\(-[0-9]\{4\}\)\{0,1\} Tigera/Copyright (c) \1-$$YEAR Tigera/"
 Copyright (c) 2012-2025 Tigera, Inc. All rights reserved.
 Copyright (c) 2013 Kelsey Hightower
+Copyright (c) 2015 The Libbpf Authors. All rights reserved.
 Copyright (c) 2015-2020 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2021 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2024 Tigera, Inc. All rights reserved.
@@ -2870,12 +2872,14 @@ SPDX:Apache-2.0
 
 == Copyright
 Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
+Copyright (C) 1991, 1999 Free Software Foundation, Inc.
 Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
 Copyright (C) <year>  <name of author>
 Copyright (C) year name of author
 Copyright (c) $$YEAR Tigera/!s/Copyright (c) \([0-9]\{4\}\)\(-[0-9]\{4\}\)\{0,1\} Tigera/Copyright (c) \1-$$YEAR Tigera/"
 Copyright (c) 2012-2025 Tigera, Inc. All rights reserved.
 Copyright (c) 2013 Kelsey Hightower
+Copyright (c) 2015 The Libbpf Authors. All rights reserved.
 Copyright (c) 2015-2020 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2021 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2024 Tigera, Inc. All rights reserved.
@@ -3531,12 +3535,14 @@ SPDX:Apache-2.0
 
 == Copyright
 Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
+Copyright (C) 1991, 1999 Free Software Foundation, Inc.
 Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
 Copyright (C) <year>  <name of author>
 Copyright (C) year name of author
 Copyright (c) $$YEAR Tigera/!s/Copyright (c) \([0-9]\{4\}\)\(-[0-9]\{4\}\)\{0,1\} Tigera/Copyright (c) \1-$$YEAR Tigera/"
 Copyright (c) 2012-2025 Tigera, Inc. All rights reserved.
 Copyright (c) 2013 Kelsey Hightower
+Copyright (c) 2015 The Libbpf Authors. All rights reserved.
 Copyright (c) 2015-2020 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2021 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2024 Tigera, Inc. All rights reserved.
@@ -3674,12 +3680,14 @@ SPDX:Apache-2.0
 
 == Copyright
 Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
+Copyright (C) 1991, 1999 Free Software Foundation, Inc.
 Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
 Copyright (C) <year>  <name of author>
 Copyright (C) year name of author
 Copyright (c) $$YEAR Tigera/!s/Copyright (c) \([0-9]\{4\}\)\(-[0-9]\{4\}\)\{0,1\} Tigera/Copyright (c) \1-$$YEAR Tigera/"
 Copyright (c) 2012-2025 Tigera, Inc. All rights reserved.
 Copyright (c) 2013 Kelsey Hightower
+Copyright (c) 2015 The Libbpf Authors. All rights reserved.
 Copyright (c) 2015-2020 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2021 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2024 Tigera, Inc. All rights reserved.
@@ -3817,12 +3825,14 @@ SPDX:Apache-2.0
 
 == Copyright
 Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
+Copyright (C) 1991, 1999 Free Software Foundation, Inc.
 Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
 Copyright (C) <year>  <name of author>
 Copyright (C) year name of author
 Copyright (c) $$YEAR Tigera/!s/Copyright (c) \([0-9]\{4\}\)\(-[0-9]\{4\}\)\{0,1\} Tigera/Copyright (c) \1-$$YEAR Tigera/"
 Copyright (c) 2012-2025 Tigera, Inc. All rights reserved.
 Copyright (c) 2013 Kelsey Hightower
+Copyright (c) 2015 The Libbpf Authors. All rights reserved.
 Copyright (c) 2015-2020 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2021 Tigera, Inc. All rights reserved.
 Copyright (c) 2015-2024 Tigera, Inc. All rights reserved.
