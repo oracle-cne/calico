@@ -35,6 +35,9 @@ BuildRequires:  gcc
 BuildRequires:  kernel-headers
 BuildRequires:  elfutils-libelf-devel
 BuildRequires:  zlib-devel
+%if %{?oraclelinux} == 8
+BuildRequires:  gcc-toolset-11
+%endif
 Requires:       runit
 Requires:       tini
 Requires:       iptables
@@ -114,6 +117,12 @@ Typha sits between the datastore (such as the Kubernetes API server) and many in
 GOPATH=$(pwd)
 mkdir -p ${GOPATH}/bin
 export GOTOOLCHAIN=local
+
+%if %{?oraclelinux} == 8
+echo "+++ Enabling gcc-toolset-11 compiler environment"
+source /opt/rh/gcc-toolset-11/enable
+gcc --version
+%endif
 
 # Binaries to build: apiserver filecheck dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
 %define rpm_name apiserver

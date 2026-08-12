@@ -20,7 +20,10 @@
 /dist/
 .go-pkg-cache/
 /artifacts/
-bpf-gpl/libbpf
+bpf-gpl/libbpf/*
+!bpf-gpl/libbpf/offline-include/
+!bpf-gpl/libbpf/offline-include/iproute2/
+!bpf-gpl/libbpf/offline-include/iproute2/bpf_elf.h
 bpf-gpl/libbpf/src/amd64/
 bpf-gpl/libbpf/src/arm64/
 bpf-gpl/libbpf/src/ppc64le/
