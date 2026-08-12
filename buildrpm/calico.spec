@@ -298,39 +298,39 @@ install -D -m 755 bin/csidriver %{buildroot}%{_bindir}/csidriver
 install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 
 %files -n apiserver
-%license apiserver/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/apiserver
 
 %files -n app-policy
-%license app-policy/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/dikastes
 %attr(755,root,root) %{_bindir}/healthz
 
 %files -n calicoctl
-%license calicoctl/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calicoctl
 
 %files -n cni-plugin
-%license cni-plugin/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) /opt/cni/bin/install
 %attr(755,root,root) /opt/cni/bin/cni-plugin-install
 %attr(755,root,root) /opt/cni/bin/calico
 %attr(755,root,root) /opt/cni/bin/calico-ipam
 
 %files -n felix
-%license felix/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calico-felix
 %attr(755,root,root) %{_bindir}/calico-felix-wrapper
 /usr/lib/calico/bpf/*
 /etc/calico/felix.cfg
 
 %files -n kube-controllers
-%license kube-controllers/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/kube-controllers
 %attr(755,root,root) %{_bindir}/check-status
 
 %files -n node
-%license node/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 /etc/calico/*
 /etc/service/*
 %attr(755,root,root) /etc/rc.local.node
@@ -339,13 +339,13 @@ install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 %attr(755,root,root) %{_bindir}/mountns
 
 %files -n pod2daemon
-%license pod2daemon/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/node-driver-registrar
 %attr(755,root,root) %{_bindir}/flexvol
 %attr(755,root,root) %{_bindir}/csidriver
 
 %files -n typha
-%license typha/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calico-typha
 
 
