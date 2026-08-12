@@ -115,13 +115,6 @@ GOPATH=$(pwd)
 mkdir -p ${GOPATH}/bin
 export GOTOOLCHAIN=local
 
-%if %{?oraclelinux} == 8
-# setup gcc toolset 11
-dnf install gcc-toolset-11
-echo "source /opt/rh/gcc-toolset-11/enable" >> ~/.bashrc
-source ~/.bashrc
-%endif
-
 # Binaries to build: apiserver filecheck dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
 %define rpm_name apiserver
 pushd %{rpm_name}
