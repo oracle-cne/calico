@@ -29,6 +29,8 @@ BuildRequires:	make
 BuildRequires:  libbpf-devel
 BuildRequires:  libbpf
 BuildRequires:  libbpf-static
+BuildRequires:  libpcap-devel
+BuildRequires:  libpcap
 BuildRequires:  clang
 BuildRequires:  llvm
 BuildRequires:  gcc
@@ -173,61 +175,7 @@ go build -trimpath=false -v \
 popd
 
 %define rpm_name felix
-echo "+++ BUILDING FELIX WITH LOCAL TOOLCHAIN"
-echo "+++ Verifying local build tools"
-go version
-clang --version
-llc --version
-gcc -dumpmachine
-
-echo "+++ Preparing Felix libbpf compatibility tree from local RPM content"
-mkdir -p %{rpm_name}/bpf-gpl/libbpf/src/%{arch}
-mkdir -p %{rpm_name}/bpf-gpl/libbpf/include/uapi
-for header in /usr/include/bpf/*.h; do
-  ln -sf "${header}" "%{rpm_name}/bpf-gpl/libbpf/src/$(basename "${header}")"
-done
-ln -sf "%{_libdir}/libbpf.a" "%{rpm_name}/bpf-gpl/libbpf/src/%{arch}/libbpf.a"
-
-echo "+++ Building Felix Apache-licensed BPF objects"
-make -j$(nproc) -C %{rpm_name}/bpf-apache clean all
-
-echo "+++ Building Felix GPL BPF objects with local libbpf headers"
-make -j$(nproc) -C %{rpm_name}/bpf-gpl clean all ut-objs map-objs
-
-echo "+++ Staging Felix BPF objects"
-rm -rf %{rpm_name}/bin/bpf
-mkdir -p %{rpm_name}/bin/bpf
-for obj in $(%{rpm_name}/bpf-gpl/list-objs); do
-  cp "%{rpm_name}/bpf-gpl/${obj}" "%{rpm_name}/bin/bpf/"
-done
-cp %{rpm_name}/bpf-gpl/bin/tc_preamble_ingress.o \
-   %{rpm_name}/bpf-gpl/bin/tc_preamble_egress.o \
-   %{rpm_name}/bpf-gpl/bin/xdp_preamble.o \
-   %{rpm_name}/bpf-gpl/bin/policy_default_ingress.o \
-   %{rpm_name}/bpf-gpl/bin/policy_default_egress.o \
-   %{rpm_name}/bpf-gpl/bin/tcx_test.o \
-   %{rpm_name}/bpf-gpl/bin/common_map_stub.o \
-   %{rpm_name}/bpf-gpl/bin/ipv4_map_stub.o \
-   %{rpm_name}/bpf-gpl/bin/ipv6_map_stub.o \
-   %{rpm_name}/bpf-gpl/bin/xdp_map_stub.o \
-   %{rpm_name}/bpf-gpl/bin/common_map_stub_ing.o \
-   %{rpm_name}/bpf-apache/bin/*.o \
-   %{rpm_name}/bin/bpf/
-
-echo "+++ Building Felix binary with local Go and libbpf-static"
-pushd %{rpm_name}
-CGO_ENABLED=1 \
-CGO_CFLAGS="-I/usr/include/bpf -I${GOPATH}/%{rpm_name}/bpf-gpl -Werror" \
-CGO_LDFLAGS="-L${GOPATH}/%{rpm_name}/bpf-gpl/libbpf/src/%{arch} -lbpf -lelf -lz" \
-go build -trimpath=false -v -buildvcs=false \
-         -o bin/calico-felix-%{arch} \
-         -ldflags "-X github.com/projectcalico/calico/pkg/buildinfo.Version=v%{version} \
-                   -X github.com/projectcalico/calico/pkg/buildinfo.BuildDate=$(date -u +'%FT%T%z') \
-                   -X github.com/projectcalico/calico/pkg/buildinfo.GitRevision=%{git_short_ver} \
-                   -B 0x$(git rev-parse HEAD)" \
-         github.com/projectcalico/calico/felix/cmd/calico-felix
-popd
-echo "+++ Finished building Felix with local toolchain"
+felix/hack/build-felix-host.sh --arch %{arch}
 
 %define rpm_name kube-controllers
 pushd %{rpm_name}
