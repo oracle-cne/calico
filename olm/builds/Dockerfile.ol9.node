@@ -40,7 +40,7 @@ RUN microdnf install --setopt=tsflags=nodocs -y \
     ipset ipset-libs iptables iputils kmod libmnl libnfnetlink \
     libnetfilter_conntrack libnetfilter_cthelper \
     libnetfilter_cttimeout libnetfilter_queue libpcap \
-    net-tools procps which &&\
+    libnl3 net-tools procps which &&\
     microdnf clean all &&\
     rm -rf /var/cache/yum
 
