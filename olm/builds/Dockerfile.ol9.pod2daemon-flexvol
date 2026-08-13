@@ -18,4 +18,6 @@ COPY THIRD_PARTY_LICENSES.txt /usr/share/licenses/
 
 COPY SECURITY.md /usr/share/licenses/
 
+RUN microdnf install coreutils-single bash
+
 ENTRYPOINT ["/usr/local/bin/flexvol.sh"]
