@@ -11,7 +11,7 @@ RUN dnf install -y /tmp/*.rpm runit calico-bird --nogpgcheck &&\
     dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
     ln -s /usr/share/licenses /LICENSES
 
-FROM container-registry.oracle.com/os/oraclelinux:9-slim
+FROM container-registry.oracle.com/os/oraclelinux:9
 
 RUN mkdir -p /etc/calico \
              /etc/service \
@@ -35,7 +35,7 @@ COPY --from=0 /usr/lib/calico/bpf /usr/lib/calico/bpf
 
 COPY --from=0 /usr/share/licenses/node/* /usr/share/licenses/
 
-RUN microdnf install --setopt=tsflags=nodocs -y \
+RUN dnf install -y --setopt=tsflags=nodocs -y \
     bpftool conntrack-tools iproute iproute-tc \
     ipset ipset-libs iptables iputils kmod libmnl libnfnetlink \
     libnetfilter_conntrack libnetfilter_cthelper \
