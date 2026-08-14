@@ -41,7 +41,7 @@ RUN dnf install -y --setopt=tsflags=nodocs -y \
     libnetfilter_conntrack libnetfilter_cthelper \
     libnetfilter_cttimeout libnetfilter_queue libpcap \
     libnl3 net-tools procps which &&\
-    microdnf clean all &&\
+    dnf clean all &&\
     rm -rf /var/cache/yum
 
 # Set the suid bit on bird to allow our user to execute them with root permissions.
