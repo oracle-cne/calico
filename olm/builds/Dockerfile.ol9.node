@@ -37,7 +37,7 @@ COPY --from=0 /usr/share/licenses/node/* /usr/share/licenses/
 
 RUN dnf install -y --setopt=tsflags=nodocs -y \
     bpftool conntrack-tools iproute iproute-tc \
-    ipset ipset-libs iptables iputils kmod libmnl libnfnetlink \
+    ipset ipset-libs iptables nftables iputils kmod libmnl libnfnetlink \
     libnetfilter_conntrack libnetfilter_cthelper \
     libnetfilter_cttimeout libnetfilter_queue libpcap \
     libnl3 net-tools procps which &&\
