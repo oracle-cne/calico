@@ -1,6 +1,7 @@
 
 %global _buildhost build-ol%{?oraclelinux}-%{?_arch}.oracle.com
 %{!?registry_url: %global registry_url container-registry.oracle.com/olcne}
+%{!?gofips140: %global gofips140 inprocess}
 
 %global debug_package %{nil}
 %global git_short_ver $(git rev-parse --short HEAD)
@@ -37,6 +38,7 @@ BuildRequires:  gcc
 BuildRequires:  kernel-headers
 BuildRequires:  elfutils-libelf-devel
 BuildRequires:  zlib-devel
+BuildRequires:  file
 %if %{?oraclelinux} == 8
 BuildRequires:  gcc-toolset-11
 %endif
@@ -118,7 +120,20 @@ Typha sits between the datastore (such as the Kubernetes API server) and many in
 %build
 GOPATH=$(pwd)
 mkdir -p ${GOPATH}/bin
+mkdir -p ${GOPATH}/pkg/mod
 export GOTOOLCHAIN=local
+export GOMODCACHE=${GOPATH}/pkg/mod
+
+verify_static_go_fips_binary() {
+  binary="$1"
+  echo "+++ Verifying ${binary} is statically linked"
+  file "${binary}"
+  file "${binary}" | grep -q "statically linked"
+  echo "+++ Verifying ${binary} was built with native Go FIPS mode"
+  go version -m "${binary}"
+  go version -m "${binary}" | grep "GOFIPS140=" >/dev/null
+  go version -m "${binary}" | grep "fips140=on" >/dev/null
+}
 
 %if %{?oraclelinux} == 8
 echo "+++ Enabling gcc-toolset-11 compiler environment"
@@ -162,17 +177,21 @@ popd
 
 %define rpm_name cni-plugin
 pushd %{rpm_name}
-go build -trimpath=false -v \
+echo "+++ Building %{rpm_name}/calico with CGO_ENABLED=0 GOFIPS140=%{gofips140}"
+CGO_ENABLED=0 GOEXPERIMENT= GOFIPS140=%{gofips140} go build -trimpath=false -v \
          -o ${GOPATH}/bin/calico \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico/calico.go
 
-go build -trimpath=false -v \
+echo "+++ Building %{rpm_name}/cni-plugin-install with CGO_ENABLED=0 GOFIPS140=%{gofips140}"
+CGO_ENABLED=0 GOEXPERIMENT= GOFIPS140=%{gofips140} go build -trimpath=false -v \
          -o ${GOPATH}/bin/cni-plugin-install \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/install/install.go
 
 popd
+verify_static_go_fips_binary ${GOPATH}/bin/calico
+verify_static_go_fips_binary ${GOPATH}/bin/cni-plugin-install
 
 %define rpm_name felix
 felix/hack/build-felix-host.sh --arch %{arch}
@@ -296,6 +315,19 @@ install -D -m 755 bin/csidriver %{buildroot}%{_bindir}/csidriver
 
 # typha
 install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
+
+%check
+verify_static_cni_rpm_binary() {
+  binary="$1"
+  echo "+++ Verifying installed CNI RPM binary ${binary} is statically linked"
+  file "${binary}"
+  file "${binary}" | grep -q "statically linked"
+}
+
+verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/install
+verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/cni-plugin-install
+verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/calico
+verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/calico-ipam
 
 %files -n apiserver
 %license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md

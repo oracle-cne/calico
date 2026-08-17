@@ -5,12 +5,16 @@ String version = "3.32.1";
 String image_tag = "v" + version;
 String registry_namespace = "olcne";
 String registry = "container-registry.oracle.com/" + registry_namespace;
+String fipsModule = "inprocess";
+
+env.GOFIPS140 = fipsModule;
+env.GOEXPERIMENT = "";
 
 olcnePipeline(
   branchPattern: new BranchPattern(master: "oracle/release/3.32.1", feature: '(?!^release/.*$)(^.*$)'),
-  yumOL8Repos: ['ol8_appstream', 'ol8_codeready_builder', 'ol8_addons'],
+  yumOL9Repos: ['ol9_appstream', 'ol9_codeready_builder'],
   builderEphemeralRequest: '25G',
-  platforms: ['ol8'],
+  platforms: ['ol9'],
   architectures: ['x86_64', 'aarch64'],
   containers: [
       (registry + '/apiserver:' + image_tag)             : registry_namespace + '/apiserver:' + image_tag,
@@ -25,7 +29,7 @@ olcnePipeline(
   ],
   customPlatformStages: [
     customPlatformSteps: [
-      ol8: [container: [enabled: true ], buildContainerRpms: [enabled: true ]],
+      ol9: [container: [enabled: true ], buildContainerRpms: [enabled: true ]],
     ],
   ]
 )
