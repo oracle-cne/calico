@@ -28,7 +28,7 @@ VERSION=v${1}
 IMAGE_LOCATION=${2}
 REGISTRY=${3:-container-registry.oracle.com/olcne}
 YUM_REPO_CONFIG_DIR=${4:-}
-DOCKER_FILE=./olm/builds/Dockerfile.ol9
+DOCKER_FILE=./olm/builds/Dockerfile.ol8
 image_tag="${VERSION}"
 
 echo "build-image.sh: version=${VERSION}"
@@ -45,10 +45,6 @@ echo "build-image.sh: ensured output directory ${IMAGE_LOCATION}/oracle_docker"
 
 CALICO_IMAGE="apiserver cni csi ctl dikastes kube-controllers node node-driver-registrar pod2daemon-flexvol typha"
 for IMAGE in ${CALICO_IMAGE}; do
-	DOCKER_FILE=./olm/builds/Dockerfile.ol9
-	if [ "${IMAGE}" = "node" ]; then
-		DOCKER_FILE=./olm/builds/Dockerfile.ol9
-	fi
 	echo "build-image.sh: building image=${IMAGE} dockerfile=${DOCKER_FILE}.${IMAGE}"
 	build_args=(
 	    --pull
