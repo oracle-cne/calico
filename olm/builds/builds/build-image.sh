@@ -20,19 +20,28 @@ set -o pipefail
 
 if [[ ${#} -eq 0 ]] ; then
     echo "usage:" >&2
-    echo "  ${0} version calico_binary_location [registry] [yum_repo_config_dir]" >&2
+    echo "  ${0} version calico_binary_location [registry] [ol8|ol9] [yum_repo_config_dir]" >&2
     exit 1
 fi
 
 VERSION=v${1}
 IMAGE_LOCATION=${2}
 REGISTRY=${3:-container-registry.oracle.com/olcne}
-YUM_REPO_CONFIG_DIR=${4:-}
-DOCKER_FILE=./olm/builds/Dockerfile.ol8
+IMAGE_PLATFORM=${4:-ol9}
+YUM_REPO_CONFIG_DIR=${5:-}
+case "${IMAGE_PLATFORM}" in
+    ol8|ol9) ;;
+    *)
+        echo "build-image.sh: unsupported image platform ${IMAGE_PLATFORM}; expected ol8 or ol9" >&2
+        exit 1
+        ;;
+esac
+DOCKER_FILE=./olm/builds/Dockerfile.${IMAGE_PLATFORM}
 
 echo "build-image.sh: version=${VERSION}"
 echo "build-image.sh: image_location=${IMAGE_LOCATION}"
 echo "build-image.sh: registry=${REGISTRY}"
+echo "build-image.sh: image_platform=${IMAGE_PLATFORM}"
 if [[ -n "${YUM_REPO_CONFIG_DIR}" ]]; then
     echo "build-image.sh: using unified yum repo config directory ${YUM_REPO_CONFIG_DIR}"
 else
