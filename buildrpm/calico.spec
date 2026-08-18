@@ -129,6 +129,11 @@ verify_static_go_fips_binary() {
   echo "+++ Verifying ${binary} is statically linked"
   file "${binary}"
   file "${binary}" | grep -q "statically linked"
+  verify_go_fips_binary "${binary}"
+}
+
+verify_go_fips_binary() {
+  binary="$1"
   echo "+++ Verifying ${binary} was built with native Go FIPS mode"
   go version -m "${binary}"
   go version -m "${binary}" | grep "GOFIPS140=" >/dev/null
@@ -143,6 +148,16 @@ build_static_go_fips_binary() {
            -o "${binary}" \
            "$@"
   verify_static_go_fips_binary "${binary}"
+}
+
+build_cgo_go_fips_binary() {
+  binary="$1"
+  shift
+  echo "+++ Building ${binary} with CGO_ENABLED=1 GOFIPS140=%{gofips140}"
+  CGO_ENABLED=1 GOEXPERIMENT= GOFIPS140=%{gofips140} go build -trimpath=false -v \
+           -o "${binary}" \
+           "$@"
+  verify_go_fips_binary "${binary}"
 }
 
 %if %{?oraclelinux} == 8
@@ -215,7 +230,7 @@ build_static_go_fips_binary ${GOPATH}/bin/calico-node \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico-node/main.go
 
-build_static_go_fips_binary ${GOPATH}/bin/mountns \
+build_cgo_go_fips_binary ${GOPATH}/bin/mountns \
          -ldflags "-X pkg/lifecycle/startup.VERSION=v%{version}" \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/mountns/main.go
@@ -310,15 +325,20 @@ install -D -m 755 bin/csidriver %{buildroot}%{_bindir}/csidriver
 install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 
 %check
+verify_go_fips_rpm_binary() {
+  binary="$1"
+  echo "+++ Verifying installed RPM binary ${binary} was built with native Go FIPS mode"
+  go version -m "${binary}"
+  go version -m "${binary}" | grep "GOFIPS140=" >/dev/null
+  go version -m "${binary}" | grep "fips140=on" >/dev/null
+}
+
 verify_static_go_fips_rpm_binary() {
   binary="$1"
   echo "+++ Verifying installed RPM binary ${binary} is statically linked"
   file "${binary}"
   file "${binary}" | grep -q "statically linked"
-  echo "+++ Verifying installed RPM binary ${binary} was built with native Go FIPS mode"
-  go version -m "${binary}"
-  go version -m "${binary}" | grep "GOFIPS140=" >/dev/null
-  go version -m "${binary}" | grep "fips140=on" >/dev/null
+  verify_go_fips_rpm_binary "${binary}"
 }
 
 for binary in \
@@ -333,13 +353,14 @@ for binary in \
   %{buildroot}%{_bindir}/kube-controllers \
   %{buildroot}%{_bindir}/check-status \
   %{buildroot}%{_bindir}/calico-node \
-  %{buildroot}%{_bindir}/mountns \
   %{buildroot}%{_bindir}/node-driver-registrar \
   %{buildroot}%{_bindir}/flexvol \
   %{buildroot}%{_bindir}/csidriver \
   %{buildroot}%{_bindir}/calico-typha; do
   verify_static_go_fips_rpm_binary "${binary}"
 done
+
+verify_go_fips_rpm_binary %{buildroot}%{_bindir}/mountns
 
 %files -n apiserver
 %license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
