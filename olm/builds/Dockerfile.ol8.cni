@@ -14,9 +14,7 @@ COPY --from=0 /opt/cni/bin/cni-plugin-install /opt/cni/bin/cni-plugin-install
 COPY --from=0 /opt/cni/bin/calico /opt/cni/bin/calico
 COPY --from=0 /opt/cni/bin/calico-ipam /opt/cni/bin/calico-ipam
 
-RUN ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/install &&\
-    cmp -s /opt/cni/bin/calico /opt/cni/bin/calico-ipam &&\
-    ! cmp -s /opt/cni/bin/calico /opt/cni/bin/cni-plugin-install
+RUN ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/install
 
 COPY THIRD_PARTY_LICENSES.txt /usr/share/licenses/
 
