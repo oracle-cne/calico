@@ -11,10 +11,12 @@ FROM container-registry.oracle.com/os/oraclelinux:8-slim
 RUN mkdir -m 777 -p /opt/cni/bin
 
 COPY --from=0 /opt/cni/bin/cni-plugin-install /opt/cni/bin/cni-plugin-install
+COPY --from=0 /opt/cni/bin/calico /opt/cni/bin/calico
+COPY --from=0 /opt/cni/bin/calico-ipam /opt/cni/bin/calico-ipam
 
 RUN ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/install &&\
-    ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/calico &&\
-    ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/calico-ipam
+    cmp -s /opt/cni/bin/calico /opt/cni/bin/calico-ipam &&\
+    ! cmp -s /opt/cni/bin/calico /opt/cni/bin/cni-plugin-install
 
 COPY --from=0 /usr/share/licenses/cni-plugin/* /usr/share/licenses/
 

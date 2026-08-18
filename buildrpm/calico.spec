@@ -292,7 +292,17 @@ install -m 755 -d %{buildroot}/opt/cni/bin
 install -D -m 755 bin/install %{buildroot}/opt/cni/bin/install
 install -D -m 755 bin/cni-plugin-install %{buildroot}/opt/cni/bin/cni-plugin-install
 install -D -m 755 bin/calico %{buildroot}/opt/cni/bin/calico
-install -D -m 755 bin/calico %{buildroot}/opt/cni/bin/calico-ipam
+cp -a %{buildroot}/opt/cni/bin/calico %{buildroot}/opt/cni/bin/calico-ipam
+echo "+++ Verifying Calico CNI plugin and IPAM binaries are identical"
+if ! cmp -s %{buildroot}/opt/cni/bin/calico %{buildroot}/opt/cni/bin/calico-ipam; then
+  echo "+++ ERROR: %{buildroot}/opt/cni/bin/calico and %{buildroot}/opt/cni/bin/calico-ipam differ"
+  exit 1
+fi
+echo "+++ Verifying Calico CNI plugin and installer binaries are different"
+if cmp -s %{buildroot}/opt/cni/bin/calico %{buildroot}/opt/cni/bin/cni-plugin-install; then
+  echo "+++ ERROR: %{buildroot}/opt/cni/bin/calico and %{buildroot}/opt/cni/bin/cni-plugin-install are identical"
+  exit 1
+fi
 
 # felix
 install -d -m 755 %{buildroot}/usr/lib/calico/bpf
