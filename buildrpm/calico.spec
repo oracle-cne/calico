@@ -135,6 +135,16 @@ verify_static_go_fips_binary() {
   go version -m "${binary}" | grep "fips140=on" >/dev/null
 }
 
+build_static_go_fips_binary() {
+  binary="$1"
+  shift
+  echo "+++ Building ${binary} with CGO_ENABLED=0 GOFIPS140=%{gofips140}"
+  CGO_ENABLED=0 GOEXPERIMENT= GOFIPS140=%{gofips140} go build -trimpath=false -v \
+           -o "${binary}" \
+           "$@"
+  verify_static_go_fips_binary "${binary}"
+}
+
 %if %{?oraclelinux} == 8
 echo "+++ Enabling gcc-toolset-11 compiler environment"
 source /opt/rh/gcc-toolset-11/enable
@@ -144,30 +154,26 @@ gcc --version
 # Binaries to build: apiserver dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
 %define rpm_name apiserver
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/%{rpm_name} \
-	 -ldflags "-X main.VERSION=v%{version}" \
+build_static_go_fips_binary ${GOPATH}/bin/%{rpm_name} \
+         -ldflags "-X main.VERSION=v%{version}" \
          cmd/%{rpm_name}/%{rpm_name}.go
 
 popd
 
 %define rpm_name app-policy
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/dikastes \
+build_static_go_fips_binary ${GOPATH}/bin/dikastes \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/dikastes/dikastes.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/healthz \
+build_static_go_fips_binary ${GOPATH}/bin/healthz \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/healthz/healthz.go
 popd
 
 %define rpm_name calicoctl
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/%{rpm_name} \
+build_static_go_fips_binary ${GOPATH}/bin/%{rpm_name} \
          -ldflags "-X main.VERSION=v%{version}" \
          -ldflags "-X %{rpm_name}/calicoctl/commands.VERSION=v%{version} \
                    -X %{rpm_name}/commands.GIT_REVISION=%{git_short_ver} \
@@ -177,34 +183,26 @@ popd
 
 %define rpm_name cni-plugin
 pushd %{rpm_name}
-echo "+++ Building %{rpm_name}/calico with CGO_ENABLED=0 GOFIPS140=%{gofips140}"
-CGO_ENABLED=0 GOEXPERIMENT= GOFIPS140=%{gofips140} go build -trimpath=false -v \
-         -o ${GOPATH}/bin/calico \
+build_static_go_fips_binary ${GOPATH}/bin/calico \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico/calico.go
 
-echo "+++ Building %{rpm_name}/cni-plugin-install with CGO_ENABLED=0 GOFIPS140=%{gofips140}"
-CGO_ENABLED=0 GOEXPERIMENT= GOFIPS140=%{gofips140} go build -trimpath=false -v \
-         -o ${GOPATH}/bin/cni-plugin-install \
+build_static_go_fips_binary ${GOPATH}/bin/cni-plugin-install \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/install/install.go
 
 popd
-verify_static_go_fips_binary ${GOPATH}/bin/calico
-verify_static_go_fips_binary ${GOPATH}/bin/cni-plugin-install
 
 %define rpm_name felix
 felix/hack/build-felix-host.sh --arch %{arch}
 
 %define rpm_name kube-controllers
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/%{rpm_name} \
+build_static_go_fips_binary ${GOPATH}/bin/%{rpm_name} \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/%{rpm_name}/main.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/check-status \
+build_static_go_fips_binary ${GOPATH}/bin/check-status \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/check-status/main.go
 popd
@@ -212,14 +210,12 @@ popd
 
 %define rpm_name node
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/calico-node \
+build_static_go_fips_binary ${GOPATH}/bin/calico-node \
          -ldflags "-X pkg/lifecycle/startup.VERSION=v%{version}" \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico-node/main.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/mountns \
+build_static_go_fips_binary ${GOPATH}/bin/mountns \
          -ldflags "-X pkg/lifecycle/startup.VERSION=v%{version}" \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/mountns/main.go
@@ -230,18 +226,16 @@ popd
 pushd %{rpm_name}
 # node-driver-registrar is built from the staged upstream kubernetes-csi source.
 pushd node-driver-registrar
-CGO_ENABLED=0 go build -trimpath=false -buildvcs=false -v \
-         -o ${GOPATH}/bin/node-driver-registrar \
+build_static_go_fips_binary ${GOPATH}/bin/node-driver-registrar \
+         -buildvcs=false \
          cmd/csi-node-driver-registrar/*.go
 popd
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/flexvol \
+build_static_go_fips_binary ${GOPATH}/bin/flexvol \
          -ldflags "-X main.VERSION=v%{version}" \
          flexvol/flexvoldriver.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/csidriver \
+build_static_go_fips_binary ${GOPATH}/bin/csidriver \
          -ldflags "-X main.VERSION=v%{version}" \
          csidriver/main.go
 popd
@@ -249,8 +243,7 @@ popd
 
 %define rpm_name typha
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/calico-typha \
+build_static_go_fips_binary ${GOPATH}/bin/calico-typha \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico-typha/typha.go
 popd
@@ -317,17 +310,36 @@ install -D -m 755 bin/csidriver %{buildroot}%{_bindir}/csidriver
 install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 
 %check
-verify_static_cni_rpm_binary() {
+verify_static_go_fips_rpm_binary() {
   binary="$1"
-  echo "+++ Verifying installed CNI RPM binary ${binary} is statically linked"
+  echo "+++ Verifying installed RPM binary ${binary} is statically linked"
   file "${binary}"
   file "${binary}" | grep -q "statically linked"
+  echo "+++ Verifying installed RPM binary ${binary} was built with native Go FIPS mode"
+  go version -m "${binary}"
+  go version -m "${binary}" | grep "GOFIPS140=" >/dev/null
+  go version -m "${binary}" | grep "fips140=on" >/dev/null
 }
 
-verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/install
-verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/cni-plugin-install
-verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/calico
-verify_static_cni_rpm_binary %{buildroot}/opt/cni/bin/calico-ipam
+for binary in \
+  %{buildroot}%{_bindir}/apiserver \
+  %{buildroot}%{_bindir}/dikastes \
+  %{buildroot}%{_bindir}/healthz \
+  %{buildroot}%{_bindir}/calicoctl \
+  %{buildroot}/opt/cni/bin/install \
+  %{buildroot}/opt/cni/bin/cni-plugin-install \
+  %{buildroot}/opt/cni/bin/calico \
+  %{buildroot}/opt/cni/bin/calico-ipam \
+  %{buildroot}%{_bindir}/kube-controllers \
+  %{buildroot}%{_bindir}/check-status \
+  %{buildroot}%{_bindir}/calico-node \
+  %{buildroot}%{_bindir}/mountns \
+  %{buildroot}%{_bindir}/node-driver-registrar \
+  %{buildroot}%{_bindir}/flexvol \
+  %{buildroot}%{_bindir}/csidriver \
+  %{buildroot}%{_bindir}/calico-typha; do
+  verify_static_go_fips_rpm_binary "${binary}"
+done
 
 %files -n apiserver
 %license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
