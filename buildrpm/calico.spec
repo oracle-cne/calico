@@ -32,8 +32,8 @@ BuildRequires:  libbpf
 BuildRequires:  libbpf-static
 BuildRequires:  libpcap-devel
 BuildRequires:  libpcap
-BuildRequires:  clang
-BuildRequires:  llvm
+BuildRequires:  clang = 18.1.8
+BuildRequires:  llvm = 18.1.8
 BuildRequires:  gcc
 BuildRequires:  kernel-headers
 BuildRequires:  elfutils-libelf-devel
