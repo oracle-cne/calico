@@ -1,0 +1,25 @@
+FROM container-registry.oracle.com/os/oraclelinux:8
+
+COPY rpms/cni-plugin*.rpm /tmp/
+
+RUN dnf install -y /tmp/*.rpm &&\
+    dnf clean all && rm -rfv /var/cache/yum /tmp/* /LICENSES &&\
+    ln -s /usr/share/licenses /LICENSES
+
+FROM container-registry.oracle.com/os/oraclelinux:8-slim
+
+RUN mkdir -m 777 -p /opt/cni/bin
+
+COPY --from=0 /bin/cni-plugin-install /opt/cni/bin/cni-plugin-install
+
+RUN ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/install &&\
+    ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/calico &&\
+    ln -s /opt/cni/bin/cni-plugin-install /opt/cni/bin/calico-ipam
+
+COPY --from=0 /usr/share/licenses/cni-plugin/* /usr/share/licenses/
+
+WORKDIR /opt/cni/bin
+
+ENV PATH="$PATH:/opt/cni/bin"
+
+CMD ["/opt/cni/bin/install"]
