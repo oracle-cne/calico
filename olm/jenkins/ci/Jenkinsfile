@@ -1,0 +1,35 @@
+@Library('olcne-pipeline') _
+import com.oracle.olcne.pipeline.BranchPattern
+
+String version = "3.32.1";
+String image_tag = "v" + version;
+String registry_namespace = "olcne";
+String registry = "container-registry.oracle.com/" + registry_namespace;
+String fipsModule = "inprocess";
+
+env.GOFIPS140 = fipsModule;
+env.GOEXPERIMENT = "";
+
+olcnePipeline(
+  branchPattern: new BranchPattern(master: "oracle/release/3.32.1", feature: '(?!^release/.*$)(^.*$)'),
+  yumOL9Repos: ['ol9_appstream', 'ol9_codeready_builder'],
+  builderEphemeralRequest: '25G',
+  platforms: ['ol9'],
+  architectures: ['x86_64', 'aarch64'],
+  containers: [
+      (registry + '/apiserver:' + image_tag)             : registry_namespace + '/apiserver:' + image_tag,
+      (registry + '/cni:' + image_tag)                   : registry_namespace + '/cni:' + image_tag,
+      (registry + '/csi:' + image_tag)                   : registry_namespace + '/csi:' + image_tag,
+      (registry + '/dikastes:' + image_tag)              : registry_namespace + '/dikastes:' + image_tag,
+      (registry + '/kube-controllers:' + image_tag)      : registry_namespace + '/kube-controllers:' + image_tag,
+      (registry + '/node:' + image_tag)                  : registry_namespace + '/node:' + image_tag,
+      (registry + '/node-driver-registrar:' + image_tag) : registry_namespace + '/node-driver-registrar:' + image_tag,
+      (registry + '/pod2daemon-flexvol:' + image_tag)    : registry_namespace + '/pod2daemon-flexvol:' + image_tag,
+      (registry + '/typha:' + image_tag)                 : registry_namespace + '/typha:' + image_tag,
+  ],
+  customPlatformStages: [
+    customPlatformSteps: [
+      ol9: [container: [enabled: true ], buildContainerRpms: [enabled: true ]],
+    ],
+  ]
+)

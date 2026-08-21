@@ -38,6 +38,7 @@ CFLAGS +=  \
 # That's tricky because go-build is based on the upstream images
 # from the go team, and they don't provide anything newer.
 CFLAGS +=  \
+	-I ./libbpf/offline-include \
 	-I ./libbpf/src/ \
 	-I ./libbpf/include/uapi
 
