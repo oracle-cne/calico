@@ -1,4 +1,5 @@
 {{{$version := printf "%s.%s.%s" .major .minor .patch}}}
+
 %global debug_package %{nil}
 %{!?registry: %global registry container-registry.oracle.com/olcne}
 %global _buildhost build-ol%{?oraclelinux}-%{?_arch}.oracle.com
@@ -29,14 +30,14 @@ Calico is an open source networking and network security solution for Kubernetes
 
 %build
 %define image_tag %{version}
+%define image_platform ol%{?oraclelinux}
 dnf clean all && \
   yumdownloader --destdir=${PWD}/rpms *-%{version}-%{release}.%{_build_arch} --exclude calico-container-image-%{version}-%{release}.%{_build_arch}
 
 chmod +x ./olm/builds/build-image.sh
-./olm/builds/build-image.sh \
-    %{image_tag} \
-    _output \
-    %{registry}
+build_image_args="%{image_tag} _output %{registry} %{image_platform}"
+%{?yumrepoconfig:build_image_args="${build_image_args} %{yumrepoconfig}"}
+./olm/builds/build-image.sh ${build_image_args}
 
 
 %install

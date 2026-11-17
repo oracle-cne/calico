@@ -1,6 +1,8 @@
 {{{$version := printf "%s.%s.%s" .major .minor .patch}}}
+
 %global _buildhost build-ol%{?oraclelinux}-%{?_arch}.oracle.com
 %{!?registry_url: %global registry_url container-registry.oracle.com/olcne}
+%{!?gofips140: %global gofips140 inprocess}
 
 %global debug_package %{nil}
 %global git_short_ver $(git rev-parse --short HEAD)
@@ -25,14 +27,26 @@ Url:            https://github.com/projectcalico/calico
 Source:         %{name}-%{version}.tar.bz2
 Vendor:         Oracle America
 BuildRequires:  git
+{{{ if semverCompare "<3.32.0" $version }}}
 BuildRequires:  podman
 BuildRequires:  podman-docker
+{{{ end }}}
 BuildRequires:	make
-BuildRequires:  golang >= 1.20.12
 BuildRequires:  libbpf-devel
 BuildRequires:  libbpf
-BuildRequires:  clang
+BuildRequires:  libbpf-static
+BuildRequires:  libpcap-devel
+BuildRequires:  libpcap
+BuildRequires:  clang = 18.1.8
+BuildRequires:  llvm = 18.1.8
+BuildRequires:  gcc
 BuildRequires:  kernel-headers
+BuildRequires:  elfutils-libelf-devel
+BuildRequires:  zlib-devel
+BuildRequires:  file
+%if %{?oraclelinux} == 8
+BuildRequires:  gcc-toolset-11
+%endif
 Requires:       runit
 Requires:       tini
 Requires:       iptables
@@ -43,7 +57,11 @@ Requires:       conntrack-tools
 Requires:       file
 Requires:       net-tools
 Requires:       kmod
-Patch0:         metadata.mk.patch
+
+Patch1:         template-port-source.patch
+{{{ if semverCompare ">=3.32.0" $version }}}
+Patch2:         template-port-libbpf.patch
+{{{ end }}}
 
 %description
 Calico is an open source networking and network security solution for Kubernetes, virtual machines, and bare-metal workloads. Calico provides two major services for Cloud Native applications:
@@ -108,46 +126,94 @@ Typha sits between the datastore (such as the Kubernetes API server) and many in
 
 %prep
 %setup -n %{name}-%{version}
-%patch0
+%patch1 -p1
+{{{ if semverCompare ">=3.32.0" $version }}}
+%patch2 -p1
+{{{ else }}}
+# Let the historical source fetch its metadata-pinned libbpf, not the new assets directory.
+rm -rf felix/bpf-gpl/libbpf
+{{{ end }}}
 
 %build
 GOPATH=$(pwd)
 mkdir -p ${GOPATH}/bin
+mkdir -p ${GOPATH}/pkg/mod
+export GOTOOLCHAIN=local
+export GOMODCACHE=${GOPATH}/pkg/mod
+
+verify_static_go_fips_binary() {
+  binary="$1"
+  echo "+++ Verifying ${binary} is statically linked"
+  file "${binary}"
+  file "${binary}" | grep -q "statically linked"
+  verify_go_fips_binary "${binary}"
+}
+
+verify_go_fips_binary() {
+  binary="$1"
+  echo "+++ Verifying ${binary} was built with native Go FIPS mode"
+  go version -m "${binary}"
+  go version -m "${binary}" | grep "GOFIPS140=" >/dev/null
+  go version -m "${binary}" | grep "fips140=on" >/dev/null
+}
+
+build_container_go_binary() {
+  binary="$1"
+  shift
+  echo "+++ Building ${binary} for container-image execution with GOFIPS140 disabled"
+  GOEXPERIMENT= GOFIPS140= go build -trimpath=false -v \
+           -o "${binary}" \
+           "$@"
+}
+
+build_container_static_go_binary() {
+  binary="$1"
+  shift
+  echo "+++ Building ${binary} for container-image execution with CGO_ENABLED=0 GOFIPS140 disabled"
+  CGO_ENABLED=0 GOEXPERIMENT= GOFIPS140= go build -trimpath=false -v \
+           -o "${binary}" \
+           "$@"
+}
+
+build_static_go_fips_binary() {
+  binary="$1"
+  shift
+  echo "+++ Building ${binary} with CGO_ENABLED=0 GOFIPS140=%{gofips140}"
+  CGO_ENABLED=0 GOEXPERIMENT= GOFIPS140=%{gofips140} go build -trimpath=false -v \
+           -o "${binary}" \
+           "$@"
+  verify_static_go_fips_binary "${binary}"
+}
 
 %if %{?oraclelinux} == 8
-# setup gcc toolset 11
-dnf install gcc-toolset-11
-echo "source /opt/rh/gcc-toolset-11/enable" >> ~/.bashrc
-source ~/.bashrc
+echo "+++ Enabling gcc-toolset-11 compiler environment"
+source /opt/rh/gcc-toolset-11/enable
+gcc --version
 %endif
 
-# Binaries to build: apiserver filecheck dikastes healthz calicoctl cni-plugin-install calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
+# Binaries to build: apiserver dikastes healthz calicoctl install cni-plugin-install calico calico-felix kube-controllers check-status calico-node mountns node-driver-registrar flexvol csidriver calico-typha
 %define rpm_name apiserver
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/%{rpm_name} \
-	 -ldflags "-X main.VERSION=v%{version}" \
+build_container_go_binary ${GOPATH}/bin/%{rpm_name} \
+         -ldflags "-X main.VERSION=v%{version}" \
          cmd/%{rpm_name}/%{rpm_name}.go
 
 popd
 
 %define rpm_name app-policy
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/dikastes \
+build_container_go_binary ${GOPATH}/bin/dikastes \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/dikastes/dikastes.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/healthz \
+build_container_go_binary ${GOPATH}/bin/healthz \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/healthz/healthz.go
 popd
 
 %define rpm_name calicoctl
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/%{rpm_name} \
+build_container_go_binary ${GOPATH}/bin/%{rpm_name} \
          -ldflags "-X main.VERSION=v%{version}" \
          -ldflags "-X %{rpm_name}/calicoctl/commands.VERSION=v%{version} \
                    -X %{rpm_name}/commands.GIT_REVISION=%{git_short_ver} \
@@ -157,36 +223,36 @@ popd
 
 %define rpm_name cni-plugin
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/calico \
+build_container_go_binary ${GOPATH}/bin/install \
+         -ldflags "-X main.VERSION=v%{version}" \
+         cmd/install/install.go
+
+build_static_go_fips_binary ${GOPATH}/bin/calico \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico/calico.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/cni-plugin-install \
+build_static_go_fips_binary ${GOPATH}/bin/cni-plugin-install \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/install/install.go
 
 popd
 
 %define rpm_name felix
-podman pull %{registry_url}/go-build:v1.24.2
-podman tag %{registry_url}/go-build:v1.24.2 %{registry_url}/go-build:v1.24.2-%{arch}
-export GO_BUILD_IMAGE=%{registry_url}/go-build
-export GO_BUILD_VER=v1.24.2
+{{{ if semverCompare ">=3.32.0" $version }}}
+felix/hack/build-felix-host.sh --arch %{arch}
+{{{ else }}}
 pushd %{rpm_name}
 make build
 popd
+{{{ end }}}
 
 %define rpm_name kube-controllers
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/%{rpm_name} \
+build_container_go_binary ${GOPATH}/bin/%{rpm_name} \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/%{rpm_name}/main.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/check-status \
+build_container_go_binary ${GOPATH}/bin/check-status \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/check-status/main.go
 popd
@@ -194,14 +260,12 @@ popd
 
 %define rpm_name node
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/calico-node \
+build_container_go_binary ${GOPATH}/bin/calico-node \
          -ldflags "-X pkg/lifecycle/startup.VERSION=v%{version}" \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico-node/main.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/mountns \
+build_container_go_binary ${GOPATH}/bin/mountns \
          -ldflags "-X pkg/lifecycle/startup.VERSION=v%{version}" \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/mountns/main.go
@@ -210,14 +274,18 @@ popd
 
 %define rpm_name pod2daemon
 pushd %{rpm_name}
-# node-driver-registrar is built from upstream kubernetes-csi project so need to git clone.
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/flexvol \
+# node-driver-registrar is built from the staged upstream kubernetes-csi source.
+pushd node-driver-registrar
+build_container_static_go_binary ${GOPATH}/bin/node-driver-registrar \
+         -buildvcs=false \
+         cmd/csi-node-driver-registrar/*.go
+popd
+
+build_static_go_fips_binary ${GOPATH}/bin/flexvol \
          -ldflags "-X main.VERSION=v%{version}" \
          flexvol/flexvoldriver.go
 
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/csidriver \
+build_container_go_binary ${GOPATH}/bin/csidriver \
          -ldflags "-X main.VERSION=v%{version}" \
          csidriver/main.go
 popd
@@ -225,8 +293,7 @@ popd
 
 %define rpm_name typha
 pushd %{rpm_name}
-go build -trimpath=false -v \
-         -o ${GOPATH}/bin/calico-typha \
+build_container_go_binary ${GOPATH}/bin/calico-typha \
          -ldflags "-X main.VERSION=v%{version}" \
          cmd/calico-typha/typha.go
 popd
@@ -235,7 +302,6 @@ popd
 %install
 # apiserver
 install -D -m 755 bin/apiserver %{buildroot}%{_bindir}/apiserver
-install -D -m 755 bin/filecheck %{buildroot}%{_bindir}/filecheck
 
 # app-policy
 install -D -m 755 bin/dikastes %{buildroot}%{_bindir}/dikastes
@@ -246,9 +312,20 @@ install -D -m 755 bin/calicoctl %{buildroot}%{_bindir}/calicoctl
 
 # cni-plugin
 install -m 755 -d %{buildroot}/opt/cni/bin
-install -D -m 755 bin/cni-plugin-install %{buildroot}/opt/cni/bin/install
+install -D -m 755 bin/install %{buildroot}/opt/cni/bin/install
+install -D -m 755 bin/cni-plugin-install %{buildroot}/opt/cni/bin/cni-plugin-install
 install -D -m 755 bin/calico %{buildroot}/opt/cni/bin/calico
-install -D -m 755 bin/calico %{buildroot}/opt/cni/bin/calico-ipam
+cp -a %{buildroot}/opt/cni/bin/calico %{buildroot}/opt/cni/bin/calico-ipam
+echo "+++ Verifying Calico CNI plugin and IPAM binaries are identical"
+if ! cmp -s %{buildroot}/opt/cni/bin/calico %{buildroot}/opt/cni/bin/calico-ipam; then
+  echo "+++ ERROR: %{buildroot}/opt/cni/bin/calico and %{buildroot}/opt/cni/bin/calico-ipam differ"
+  exit 1
+fi
+echo "+++ Verifying Calico CNI plugin and installer binaries are different"
+if cmp -s %{buildroot}/opt/cni/bin/calico %{buildroot}/opt/cni/bin/cni-plugin-install; then
+  echo "+++ ERROR: %{buildroot}/opt/cni/bin/calico and %{buildroot}/opt/cni/bin/cni-plugin-install are identical"
+  exit 1
+fi
 
 # felix
 install -d -m 755 %{buildroot}/usr/lib/calico/bpf
@@ -263,7 +340,11 @@ install -D -m 755 bin/kube-controllers %{buildroot}%{_bindir}/kube-controllers
 install -D -m 755 bin/check-status %{buildroot}%{_bindir}/check-status
 
 # node
+{{{ if semverCompare ">=3.32.0" $version }}}
+directories=(bird bird6 confd felix node-services)
+{{{ else }}}
 directories=(allocate-tunnel-addrs bird bird6 calico-bgp-daemon cni confd felix monitor-addresses node-status-reporter)
+{{{ end }}}
 for directory in "${directories[@]}"; do
   install -d -m 755 %{buildroot}/etc/service/available/${directory}/log
   install -p node/filesystem/etc/service/available/${directory}/run %{buildroot}/etc/service/available/${directory}
@@ -281,8 +362,8 @@ binary=(restart-calico-confd start_runit versions)
 for bin in "${binary[@]}"; do
 install -p node/filesystem/sbin/${bin} %{buildroot}/usr/sbin/
 done
-install -D -m 755 node/dist/bin/calico-node-%{arch} %{buildroot}%{_bindir}/calico-node
-install -D -m 755 node/dist/bin/mountns-%{arch} %{buildroot}%{_bindir}/mountns
+install -D -m 755 bin/calico-node %{buildroot}%{_bindir}/calico-node
+install -D -m 755 bin/mountns %{buildroot}%{_bindir}/mountns
 
 # pod2daemon
 install -D -m 755 bin/node-driver-registrar %{buildroot}%{_bindir}/node-driver-registrar
@@ -292,38 +373,92 @@ install -D -m 755 bin/csidriver %{buildroot}%{_bindir}/csidriver
 # typha
 install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 
+%check
+verify_go_fips_rpm_binary() {
+  binary="$1"
+  echo "+++ Verifying installed RPM binary ${binary} was built with native Go FIPS mode"
+  go version -m "${binary}"
+  go version -m "${binary}" | grep "GOFIPS140=" >/dev/null
+  go version -m "${binary}" | grep "fips140=on" >/dev/null
+}
+
+verify_static_go_fips_rpm_binary() {
+  binary="$1"
+  echo "+++ Verifying installed RPM binary ${binary} is statically linked"
+  file "${binary}"
+  file "${binary}" | grep -q "statically linked"
+  verify_go_fips_rpm_binary "${binary}"
+}
+
+verify_non_fips_rpm_binary() {
+  binary="$1"
+  echo "+++ Verifying installed RPM binary ${binary} was built without native Go FIPS mode"
+  go version -m "${binary}"
+  if go version -m "${binary}" | grep "fips140=on" >/dev/null; then
+    echo "+++ ERROR: ${binary} was unexpectedly built with native Go FIPS mode"
+    exit 1
+  fi
+}
+
+for binary in \
+  %{buildroot}/opt/cni/bin/cni-plugin-install \
+  %{buildroot}/opt/cni/bin/calico \
+  %{buildroot}/opt/cni/bin/calico-ipam \
+  %{buildroot}%{_bindir}/flexvol; do
+  verify_static_go_fips_rpm_binary "${binary}"
+done
+
+for binary in \
+  %{buildroot}%{_bindir}/apiserver \
+  %{buildroot}%{_bindir}/dikastes \
+  %{buildroot}%{_bindir}/healthz \
+  %{buildroot}%{_bindir}/calicoctl \
+  %{buildroot}/opt/cni/bin/install \
+  %{buildroot}%{_bindir}/kube-controllers \
+  %{buildroot}%{_bindir}/check-status \
+  %{buildroot}%{_bindir}/calico-node \
+  %{buildroot}%{_bindir}/node-driver-registrar \
+  %{buildroot}%{_bindir}/csidriver \
+  %{buildroot}%{_bindir}/calico-typha; do
+  verify_non_fips_rpm_binary "${binary}"
+done
+
+verify_non_fips_rpm_binary %{buildroot}%{_bindir}/mountns
+
 %files -n apiserver
-%license apiserver/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/apiserver
-%attr(755,root,root) %{_bindir}/filecheck
 
 %files -n app-policy
-%license app-policy/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/dikastes
 %attr(755,root,root) %{_bindir}/healthz
 
 %files -n calicoctl
-%license calicoctl/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calicoctl
 
 %files -n cni-plugin
-%license cni-plugin/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
-%attr(755,root,root) %{_bindir}/cni-plugin-install
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
+%attr(755,root,root) /opt/cni/bin/install
+%attr(755,root,root) /opt/cni/bin/cni-plugin-install
+%attr(755,root,root) /opt/cni/bin/calico
+%attr(755,root,root) /opt/cni/bin/calico-ipam
 
 %files -n felix
-%license felix/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calico-felix
 %attr(755,root,root) %{_bindir}/calico-felix-wrapper
 /usr/lib/calico/bpf/*
 /etc/calico/felix.cfg
 
 %files -n kube-controllers
-%license kube-controllers/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/kube-controllers
 %attr(755,root,root) %{_bindir}/check-status
 
 %files -n node
-%license node/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 /etc/calico/*
 /etc/service/*
 %attr(755,root,root) /etc/rc.local.node
@@ -332,13 +467,13 @@ install -D -m 755 bin/calico-typha %{buildroot}%{_bindir}/calico-typha
 %attr(755,root,root) %{_bindir}/mountns
 
 %files -n pod2daemon
-%license pod2daemon/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/node-driver-registrar
 %attr(755,root,root) %{_bindir}/flexvol
 %attr(755,root,root) %{_bindir}/csidriver
 
 %files -n typha
-%license typha/LICENSE THIRD_PARTY_LICENSES.txt SECURITY.md
+%license LICENSE.md THIRD_PARTY_LICENSES.txt SECURITY.md
 %attr(755,root,root) %{_bindir}/calico-typha
 
 
@@ -352,8 +487,8 @@ cp /etc/rc.local.node /etc/rc.local
 
 
 %post -n cni-plugin
-ln -s /bin/cni-plugin-install /bin/calico
-ln -s /bin/cni-plugin-install /bin/calico-ipam
+ln -s /opt/cni/bin/calico /bin/calico
+ln -s /opt/cni/bin/calico-ipam /bin/calico-ipam
 
 
 %postun -n node
