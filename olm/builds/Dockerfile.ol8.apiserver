@@ -12,8 +12,6 @@ RUN mkdir /code
 
 COPY --from=0 /bin/apiserver /code/apiserver
 
-COPY --from=0 /bin/filecheck /code/filecheck
-
 COPY THIRD_PARTY_LICENSES.txt /usr/share/licenses/
 
 COPY SECURITY.md /usr/share/licenses/

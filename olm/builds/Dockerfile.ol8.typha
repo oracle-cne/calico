@@ -29,6 +29,6 @@ ENV PATH="$PATH:/code"
 USER 999
 
 # Run Typha by default
-ENTRYPOINT ["/usr/sbin/tini", "--"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
 CMD ["calico-typha"]
